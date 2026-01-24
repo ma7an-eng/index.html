@@ -4,145 +4,84 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
-    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#1a1a1a">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="روتين العظماء">
     
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzaG9ydF9uYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29xvciI6ICIjMWExYTFhIiwKICAiaWNvbnMiOiBswogICAgewogICAgICAic3JjIjogIjEwMDAxOTk1MTAuanBnIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9qcGciCiAgICB9CiAgXQp9">
+    <link rel="apple-touch-icon" href="icon.jpg">
+    <link rel="icon" type="image/jpg" href="icon.jpg">
+    
+    <link rel="manifest" href='data:application/manifest+json;base64,ewogICJuYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzaG9ydF9uYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhMWExYSIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTFhMWEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJpY29uLmpwZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvanBnIgogICAgfQogIF0KfQ=='>
 
-    <link rel="apple-touch-icon" href="1000199510.jpg">
-    <link rel="icon" type="image/jpg" href="1000199510.jpg">
-
-    <title>روتين العظماء - V16</title>
+    <title>روتين العظماء - V17</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Great+Vibes&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         .notranslate { transform: translate(0); }
-        :root {
-            --bg-main: #f4f6f8; --bg-card: #ffffff; --text-primary: #1a1a1a;
-            --accent-black: #000000; --gold: #c5a028; --success: #27ae60;
-        }
-
+        :root { --bg-main: #f4f6f8; --bg-card: #ffffff; --text-primary: #1a1a1a; --accent-black: #000000; --gold: #c5a028; --success: #27ae60; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; padding-bottom: 90px; overscroll-behavior-y: none; user-select: none; }
 
-        body {
-            background-color: var(--bg-main); color: var(--text-primary);
-            min-height: 100vh; display: flex; justify-content: center; padding-bottom: 90px;
-            overscroll-behavior-y: none; user-select: none;
-        }
-
-        /* --- شاشة الترحيب (تم تعديل اسم الصورة) --- */
+        /* شاشة الترحيب */
         #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: #1a1a1a; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: opacity 0.5s ease-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a1a; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-out;
         }
-        .splash-logo { width: 150px; height: 150px; object-fit: contain; animation: pulse 2s infinite; border-radius: 20px; }
+        .splash-logo { width: 150px; height: 150px; object-fit: cover; border-radius: 25px; box-shadow: 0 0 30px rgba(255,255,255,0.1); animation: pulse 2s infinite; }
         .splash-text { color: #fff; margin-top: 20px; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; opacity: 0; animation: fadeInUp 1s ease-out forwards 0.5s; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .app-container { width: 100%; max-width: 600px; background: var(--bg-card); min-height: 100vh; box-shadow: 0 0 25px rgba(0,0,0,0.08); position: relative; }
 
-        .app-container {
-            width: 100%; max-width: 600px; background: var(--bg-card); min-height: 100vh;
-            box-shadow: 0 0 25px rgba(0,0,0,0.08); position: relative;
-        }
-
-        /* --- الهيدر --- */
-        .sketch-header {
-            position: relative; height: 260px; background: #222; overflow: hidden;
-            border-bottom: 4px solid var(--accent-black);
-        }
-        .sketch-img {
-            width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(100%) contrast(110%); opacity: 0.9;
-        }
-        .header-content {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(to top, #000, transparent);
-            padding: 20px; color: #fff; text-align: center;
-        }
+        /* الهيدر */
+        .sketch-header { position: relative; height: 260px; background: #222; overflow: hidden; border-bottom: 4px solid var(--accent-black); }
+        .sketch-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(110%); opacity: 0.9; }
+        .header-content { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000, transparent); padding: 20px; color: #fff; text-align: center; }
         .avatars-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
-        .mini-avatar {
-            width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff;
-            object-fit: cover; filter: grayscale(100%); background: #fff;
-        }
+        .mini-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; filter: grayscale(100%); background: #fff; }
 
-        /* --- المحتوى --- */
+        /* الأقسام */
         .view-section { display: none; padding: 20px; animation: fadeIn 0.4s; }
         .view-section.active { display: block; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
 
-        .task-card {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 16px; border: 1px solid #e0e0e0; border-radius: 12px;
-            margin-bottom: 12px; background: #fff; transition: 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
+        /* كارت المهمة */
+        .task-card { display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 1px solid #e0e0e0; border-radius: 12px; margin-bottom: 12px; background: #fff; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .task-card.done { background: #f0fff4; border-color: #bbf7d0; }
         .task-card.done h3 { text-decoration: line-through; color: #aaa; }
-        .check-btn {
-            width: 36px; height: 36px; border-radius: 50%; border: 2px solid #ddd;
-            background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            color: transparent; font-size: 1.2rem; transition: 0.2s;
-        }
+        .check-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 1.2rem; transition: 0.2s; }
         .task-card.done .check-btn { background: var(--success); border-color: var(--success); color: white; }
 
-        /* --- الشارت --- */
-        .stats-box {
-            background: #fff; padding: 25px; border-radius: 15px;
-            border: 1px solid #eee; text-align: center; margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-        }
+        /* الشارت */
+        .stats-box { background: #fff; padding: 25px; border-radius: 15px; border: 1px solid #eee; text-align: center; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
         .chart-container { position: relative; height: 250px; width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
 
-        /* --- الشهادة --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 2000;
-            display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .certificate-paper {
-            background: #fff; width: 90%; max-width: 500px; padding: 40px 20px;
-            border: 8px double #111; text-align: center; position: relative;
-            box-shadow: 0 0 60px rgba(0,0,0,0.5);
-        }
+        /* الشهادة */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .certificate-paper { background: #fff; width: 90%; max-width: 500px; padding: 40px 20px; border: 8px double #111; text-align: center; position: relative; box-shadow: 0 0 60px rgba(0,0,0,0.5); }
         .corner { position: absolute; width: 30px; height: 30px; border-top: 5px solid var(--gold); border-left: 5px solid var(--gold); }
-        .tr { top: 15px; right: 15px; transform: rotate(90deg); } .tl { top: 15px; left: 15px; }
-        .br { bottom: 15px; right: 15px; transform: rotate(180deg); } .bl { bottom: 15px; left: 15px; transform: rotate(-90deg); }
-
-        .cert-header {
-            font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; color: #111;
-            text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--gold);
-            display: inline-block; padding-bottom: 10px; margin-bottom: 20px;
-        }
+        .tr { top: 15px; right: 15px; transform: rotate(90deg); } .tl { top: 15px; left: 15px; } .br { bottom: 15px; right: 15px; transform: rotate(180deg); } .bl { bottom: 15px; left: 15px; transform: rotate(-90deg); }
+        .cert-header { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 10px; margin-bottom: 20px; }
         .cert-name { font-size: 1.6rem; font-weight: 900; color: #000; margin: 10px 0; display: block; }
-        
         .signature-section { display: flex; justify-content: space-around; align-items: flex-end; margin-top: 30px; }
-        .digital-signature {
-            font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #002244;
-            transform: rotate(-5deg); margin-bottom: 5px;
-        }
-        .official-seal {
-            width: 70px; height: 70px; border: 3px solid var(--gold); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; margin: 0 auto 5px;
-            color: var(--gold); font-weight: bold; font-family: serif;
-        }
+        .digital-signature { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #002244; transform: rotate(-5deg); margin-bottom: 5px; }
+        .official-seal { width: 70px; height: 70px; border: 3px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; color: var(--gold); font-weight: bold; font-family: serif; }
         .seal-inner { border: 1px dashed var(--gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-
         .action-btns { margin-top: 25px; display: flex; gap: 10px; justify-content: center; }
         .btn-act { padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .btn-print { background: #000; color: #fff; }
-        .btn-close { background: #eee; color: #333; }
+        .btn-print { background: #000; color: #fff; } .btn-close { background: #eee; color: #333; }
 
-        /* --- دليل التثبيت --- */
-        .install-guide { text-align: right; background: #fff; padding: 25px; border-radius: 15px; width: 85%; max-width: 400px; }
-        .install-step { margin-bottom: 15px; font-size: 0.95rem; line-height: 1.5; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        /* نافذة التثبيت الذكية (IOS/Android) */
+        .install-popup { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; padding: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 3000; display: none; text-align: center; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from {transform: translateY(100%);} to {transform: translateY(0);} }
+        .ios-arrow { animation: bounceArrow 1.5s infinite; font-size: 2rem; margin-top: 10px; display: block; }
+        @keyframes bounceArrow { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(10px);} }
 
         @media print {
             body * { visibility: hidden; }
@@ -152,30 +91,36 @@
             .action-btns { display: none; }
         }
 
-        /* --- أدوات التحكم --- */
         .day-scroller { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
         .day-chip { padding: 8px 16px; background: #e0e0e0; border-radius: 20px; cursor: pointer; font-weight: bold; white-space: nowrap; }
         .day-chip.active { background: var(--accent-black); color: #fff; }
-
-        .navbar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #ddd;
-            display: flex; justify-content: space-around; padding: 10px; z-index: 1000;
-        }
+        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px; z-index: 1000; }
         .nav-btn { background: none; border: none; font-weight: bold; color: #bbb; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; }
-        .nav-btn.active { color: var(--accent-black); }
-        .nav-icon { font-size: 1.2rem; margin-bottom: 2px; }
+        .nav-btn.active { color: var(--accent-black); } .nav-icon { font-size: 1.2rem; margin-bottom: 2px; }
 
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="1000199510.jpg" class="splash-logo" alt="Logo">
+        <img src="icon.jpg" class="splash-logo" alt="Logo">
         <div class="splash-text">روتين العظماء</div>
     </div>
 
+    <div id="install-prompt" class="install-popup">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <h3 style="margin:0">📲 تثبيت التطبيق</h3>
+            <span onclick="closeInstallPrompt()" style="font-size:1.5rem; cursor:pointer;">&times;</span>
+        </div>
+        <p style="color:#555; font-size:0.9rem; margin-bottom:15px;" id="install-text">أضف التطبيق للشاشة الرئيسية لتجربة كاملة.</p>
+        <div id="ios-instruction" style="display:none;">
+            اضغط على زر المشاركة <span style="font-size:1.2rem">⎋</span> بالأسفل، ثم اختر <strong>"إضافة إلى الصفحة الرئيسية"</strong>.
+            <span class="ios-arrow">⬇</span>
+        </div>
+        <button id="android-install-btn" class="btn-act btn-print" style="width:100%; display:none;">تثبيت الآن</button>
+    </div>
+
     <div class="app-container">
-        
         <div class="sketch-header">
             <img src="https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=1000&auto=format&fit=crop" class="sketch-img">
             <div class="header-content">
@@ -191,9 +136,7 @@
         <div id="viewToday" class="view-section active">
             <h2 style="margin: 20px 0;">قائمة اليوم 📝</h2>
             <div id="tasksList"></div>
-            <div id="emptyToday" style="text-align: center; margin-top: 50px; color: #999;">
-                القائمة فارغة.<br>قم ببناء روتينك من الجدول.
-            </div>
+            <div id="emptyToday" style="text-align: center; margin-top: 50px; color: #999;">القائمة فارغة.<br>قم ببناء روتينك من الجدول.</div>
         </div>
 
         <div id="viewPlan" class="view-section">
@@ -210,52 +153,25 @@
         <div id="viewStats" class="view-section">
             <h3 style="margin: 20px 0;">الإحصائيات الشهرية 📊</h3>
             <div class="stats-box">
-                <div class="chart-container">
-                    <canvas id="myChart"></canvas>
-                </div>
+                <div class="chart-container"><canvas id="myChart"></canvas></div>
                 <div style="display:flex; justify-content:space-around; margin-top:20px;">
                     <div><h3 id="statDone" style="color:#27ae60; margin:0">0</h3><small>منجزة</small></div>
                     <div><h3 id="statMissed" style="color:#999; margin:0">0</h3><small>متبقية</small></div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="modal-overlay" id="certModal">
         <div class="certificate-paper">
             <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
             <div class="cert-header">Certificate of Completion</div>
-            <div style="font-size: 1.1rem; color: #555;">
-                يشهد هذا بأن الأسطورة
-                <span class="cert-name" id="userName">المُنجز المثابر</span>
-                قد أتم بنجاح جميع المهام المجدولة لتاريخ
-                <span id="certDate" style="font-weight:bold; color:#000; display:block; margin-top:5px;">--/--/----</span>
-            </div>
+            <div style="font-size: 1.1rem; color: #555;">يشهد هذا بأن الأسطورة <span class="cert-name" id="userName">المُنجز المثابر</span> قد أتم بنجاح جميع المهام المجدولة لتاريخ <span id="certDate" style="font-weight:bold; color:#000; display:block; margin-top:5px;">--/--/----</span></div>
             <div class="signature-section">
-                <div style="text-align:center">
-                    <div class="digital-signature" id="sigText">Elon Musk</div>
-                    <div style="height:2px; background:#333; width:100px; margin:0 auto;"></div>
-                    <div style="font-size:0.8rem; font-weight:bold; margin-top:5px;">Signature</div>
-                </div>
-                <div style="text-align:center">
-                    <div class="official-seal"><div class="seal-inner">★</div></div>
-                    <div style="font-size:0.8rem; font-weight:bold;">Official Seal</div>
-                </div>
+                <div style="text-align:center"><div class="digital-signature" id="sigText">Elon Musk</div><div style="height:2px; background:#333; width:100px; margin:0 auto;"></div><div style="font-size:0.8rem; font-weight:bold; margin-top:5px;">Signature</div></div>
+                <div style="text-align:center"><div class="official-seal"><div class="seal-inner">★</div></div><div style="font-size:0.8rem; font-weight:bold;">Official Seal</div></div>
             </div>
-            <div class="action-btns">
-                <button class="btn-act btn-print" onclick="window.print()">🖨️ طباعة</button>
-                <button class="btn-act btn-close" onclick="closeCert()">إغلاق</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-overlay" id="installModal">
-        <div class="install-guide">
-            <h3 style="margin-bottom:15px; border-bottom:2px solid #000; padding-bottom:10px;">📲 تثبيت التطبيق</h3>
-            <div class="install-step"><strong>1. للأيفون (Safari):</strong><br>اضغط مشاركة <span style="font-size:1.2rem">⎋</span> ثم "إضافة إلى الصفحة الرئيسية" <span style="font-size:1.2rem">➕</span>.</div>
-            <div class="install-step"><strong>2. للأندرويد (Chrome):</strong><br>اضغط القائمة <span style="font-size:1.2rem">⋮</span> ثم "الإضافة إلى الشاشة الرئيسية" <span style="font-size:1.2rem">📱</span>.</div>
-            <button class="btn-act btn-close" style="width:100%; margin-top:10px;" onclick="closeInstall()">فهمت</button>
+            <div class="action-btns"><button class="btn-act btn-print" onclick="window.print()">🖨️ طباعة</button><button class="btn-act btn-close" onclick="closeCert()">إغلاق</button></div>
         </div>
     </div>
 
@@ -263,15 +179,21 @@
         <button class="nav-btn active" onclick="switchTab('today')" id="navToday"><span class="nav-icon">📝</span> اليوم</button>
         <button class="nav-btn" onclick="switchTab('plan')" id="navPlan"><span class="nav-icon">📅</span> الجدول</button>
         <button class="nav-btn" onclick="switchTab('stats')" id="navStats"><span class="nav-icon">📊</span> إحصائيات</button>
-        <button class="nav-btn" onclick="openInstall()" style="color:#27ae60"><span class="nav-icon">📲</span> تثبيت</button>
     </div>
 
     <script>
+        // --- المنطق الخاص بالتثبيت (Install Logic) ---
+        let deferredPrompt;
+        
         window.onload = function() {
+            // إخفاء السبلاش بعد ثانيتين
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
                 setTimeout(() => { splash.style.display = 'none'; }, 500);
+                
+                // فحص التثبيت بعد التحميل
+                checkInstall();
             }, 2500);
 
             const now = new Date();
@@ -282,10 +204,54 @@
             setTimeout(initChart, 500); setTimeout(updateStats, 600);
         };
 
+        // الكشف عن الجهاز وعرض نافذة التثبيت المناسبة
+        function checkInstall() {
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+            
+            // إذا لم يكن مثبتاً (ليس في وضع Standalone)
+            if (!isInStandaloneMode && !window.matchMedia('(display-mode: standalone)').matches) {
+                const prompt = document.getElementById('install-prompt');
+                
+                if (isIos) {
+                    // للأيفون: عرض التعليمات
+                    document.getElementById('ios-instruction').style.display = 'block';
+                    setTimeout(() => { prompt.style.display = 'block'; }, 3000); // إظهار بعد 3 ثواني
+                } else {
+                    // للأندرويد: سيتم التعامل معه عبر الحدث beforeinstallprompt
+                }
+            }
+        }
+
+        // التقاط حدث التثبيت للأندرويد
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const prompt = document.getElementById('install-prompt');
+            const btn = document.getElementById('android-install-btn');
+            
+            document.getElementById('install-text').innerText = "قم بتثبيت التطبيق الآن لتجربة أسرع.";
+            btn.style.display = 'block';
+            prompt.style.display = 'block';
+
+            btn.addEventListener('click', () => {
+                prompt.style.display = 'none';
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
+            });
+        });
+
+        function closeInstallPrompt() {
+            document.getElementById('install-prompt').style.display = 'none';
+        }
+
+        // --- باقي كود التطبيق ---
         const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const daysAr = {'Sunday': 'الأحد', 'Monday': 'الإثنين', 'Tuesday': 'الثلاثاء', 'Wednesday': 'الأربعاء', 'Thursday': 'الخميس', 'Friday': 'الجمعة', 'Saturday': 'السبت'};
-        let routine = JSON.parse(localStorage.getItem('routine_v13')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_v13')) || {};
+        let routine = JSON.parse(localStorage.getItem('routine_v17')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_v17')) || {};
         let currentPlanDay = '';
         let chartInstance = null;
 
@@ -318,9 +284,7 @@
             document.getElementById('certModal').style.display = 'flex';
         }
         function closeCert() { document.getElementById('certModal').style.display = 'none'; }
-        function openInstall() { document.getElementById('installModal').style.display = 'flex'; }
-        function closeInstall() { document.getElementById('installModal').style.display = 'none'; }
-        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_v13', JSON.stringify(history)); renderToday(); updateStats(); }
+        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_v17', JSON.stringify(history)); renderToday(); updateStats(); }
         
         function initChart() {
             const ctx = document.getElementById('myChart');
@@ -368,13 +332,13 @@
             const time = document.getElementById('timeInput').value;
             if(!name) return;
             routine[currentPlanDay].push({name, time});
-            localStorage.setItem('routine_v13', JSON.stringify(routine));
+            localStorage.setItem('routine_v17', JSON.stringify(routine));
             document.getElementById('taskInput').value = '';
             renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
         }
         function delTask(idx) {
             routine[currentPlanDay].splice(idx, 1);
-            localStorage.setItem('routine_v13', JSON.stringify(routine));
+            localStorage.setItem('routine_v17', JSON.stringify(routine));
             renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
         }
         function tConvert (time) {
@@ -393,4 +357,3 @@
     </script>
 </body>
 </html>
-
