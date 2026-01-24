@@ -3,455 +3,454 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة المهام - أسلوب الأساطير</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>روتين العظماء - المكافأة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --black: #000000;
-            --dark-grey: #333333;
-            --light-grey: #f4f4f4;
-            --border-grey: #d1d1d1;
-            --white: #ffffff;
-            --success-green: #27ae60; /* اللون الوحيد الملون للإنجاز */
+            --bg-body: #ffffff;
+            --text-main: #000000;
+            --text-light: #555555;
+            --border: #e0e0e0;
+            --accent: #000000;
+            --success: #27ae60;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
 
         body {
-            background-color: var(--white);
-            color: var(--black);
+            background-color: #f9f9f9;
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .main-container {
-            width: 100%;
-            max-width: 600px;
-            background: var(--white);
-            min-height: 100vh;
-            border-left: 1px solid var(--border-grey);
-            border-right: 1px solid var(--border-grey);
-            position: relative;
+            justify-content: center;
             padding-bottom: 80px;
         }
 
-        /* --- الرأس والصور --- */
-        .header {
-            background-color: var(--white);
-            color: var(--black);
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-grey);
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        .motivators {
+        /* --- الرأس (صور شخصية) --- */
+        .header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .avatars-container {
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
-        .motivator-img {
-            width: 80px;
-            height: 80px;
+        .avatar-small {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            border: 2px solid var(--light-grey);
-            object-fit: cover;
-            filter: grayscale(100%);
+            border: 2px solid var(--border);
+            padding: 2px;
+            filter: grayscale(100%); /* أبيض وأسود */
+            transition: 0.3s;
         }
+        
+        /* تلوين الصور عند التحويم كلمسة جمالية */
+        .avatar-small:hover { filter: grayscale(0%); border-color: var(--accent); }
 
-        .date-badge {
-            background: var(--light-grey);
-            color: var(--dark-grey);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            margin-top: 10px;
+        .date-tag {
+            background: #000;
+            color: #fff;
+            padding: 4px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             display: inline-block;
-            font-weight: bold;
+            margin-top: 10px;
         }
 
-        /* --- قائمة المهام (اليوم) --- */
-        .view-section { padding: 20px; display: none; }
-        .view-section.active { display: block; animation: fadeIn 0.3s ease; }
+        /* --- القوائم --- */
+        .view-section { display: none; padding: 20px; }
+        .view-section.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        /* كارت المهمة */
         .task-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid var(--light-grey);
-            margin-bottom: 5px;
-            background: var(--white);
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: #fff;
             transition: 0.2s;
         }
 
-        .task-info strong { font-size: 1.1rem; display: block; }
-        
-        /* أزرار الحالة - التغيير الجذري هنا */
-        .status-btn {
-            border: 2px solid var(--dark-grey); /* حدود رمادية غامقة */
-            width: 40px;
-            height: 40px;
-            border-radius: 50%; /* دائري */
+        .task-info h3 { font-size: 1rem; margin-bottom: 2px; }
+        .task-time { font-size: 0.8rem; color: #888; display: flex; align-items: center; gap: 4px; }
+
+        .check-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            background: transparent;
             cursor: pointer;
-            font-size: 1.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: transparent;
+            font-size: 1.2rem;
             transition: 0.2s;
-            background: transparent; /* خلفية شفافة */
-            color: transparent; /* الرمز مخفي */
+        }
+        .check-btn:hover { border-color: #000; }
+
+        /* عند الإنجاز */
+        .task-card.done { background: #fcfcfc; border-color: #eee; }
+        .task-card.done h3 { text-decoration: line-through; color: #bbb; }
+        .task-card.done .check-btn {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
         }
 
-        /* حالة الانتظار (Normal) */
-        .status-btn.not-done {
-            /* يبقى فارغاً وطبيعياً */
-            border-color: #aaa;
-        }
-        .status-btn.not-done:hover {
-            border-color: var(--black);
-            background-color: var(--light-grey);
-        }
-
-        /* حالة الإنجاز (Done) */
-        .status-btn.done {
-            background-color: var(--success-green);
-            border-color: var(--success-green);
-            color: white; /* يظهر الرمز */
-            box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
-        }
-        
-        /* النص عند الاكتمال */
-        .task-card.completed .task-info strong {
-            text-decoration: line-through;
-            color: #aaa;
-        }
-
-        /* --- لوحة التحكم (التعديل) --- */
-        .control-panel {
-            background: var(--light-grey);
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .day-tabs {
-            display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            margin-bottom: 20px;
-            padding-bottom: 5px;
-        }
-
-        .day-tab {
-            background: var(--white);
-            border: 1px solid #ccc;
-            padding: 8px 15px;
-            cursor: pointer;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-        .day-tab.active {
-            background: var(--black);
-            color: var(--white);
-            border-color: var(--black);
-        }
-
-        .add-box {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .add-box input {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            flex: 1;
-            outline: none;
-        }
-        .add-btn {
-            background: var(--black);
-            color: var(--white);
-            border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .routine-item {
-            display: flex;
-            justify-content: space-between;
-            background: var(--white);
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            align-items: center;
-        }
-        .del-btn {
-            background: transparent;
-            color: #999;
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        .del-btn:hover {
-            background: #ffecec;
-            color: red;
-            border-color: red;
-        }
-
-        /* --- القائمة السفلية --- */
-        .bottom-nav {
+        /* --- نافذة المكافأة (Modal) --- */
+        .reward-modal {
             position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 600px;
-            background: var(--white);
-            border-top: 1px solid var(--border-grey);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            z-index: 100;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            color: #999;
-            font-size: 1rem;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 2000;
+            display: none; /* مخفي افتراضياً */
+            justify-content: center;
             align-items: center;
-            gap: 5px;
+            backdrop-filter: blur(5px);
+            padding: 20px;
         }
-        .nav-btn.active { color: var(--black); }
-        .nav-indicator { width: 5px; height: 5px; background: transparent; border-radius: 50%; }
-        .nav-btn.active .nav-indicator { background: var(--black); }
 
-        .empty-msg { text-align: center; color: #999; margin-top: 50px; }
+        .reward-card {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            border-top: 5px solid var(--success);
+        }
+
+        @keyframes popUp { from {transform: scale(0.7); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+
+        .reward-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid #f0f0f0;
+        }
+
+        .reward-quote { font-size: 1.1rem; font-weight: bold; margin-bottom: 10px; line-height: 1.6; }
+        .reward-author { font-size: 0.9rem; color: #777; margin-bottom: 25px; }
+
+        .btn-close-reward {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-close-reward:hover { background: #333; }
+
+        /* --- أدوات التخطيط --- */
+        .day-scroller {
+            display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none;
+        }
+        .day-scroller::-webkit-scrollbar { display: none; }
+        
+        .day-chip {
+            padding: 8px 16px; background: #eee; border-radius: 20px; font-size: 0.9rem; white-space: nowrap; cursor: pointer;
+        }
+        .day-chip.active { background: #000; color: #fff; }
+
+        .input-box { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-box input { flex: 1; padding: 12px; border: 2px solid #eee; border-radius: 8px; }
+        .btn-add { background: #000; color: #fff; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; }
+
+        .routine-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-del { color: red; cursor: pointer; font-size: 0.8rem; }
+
+        /* --- التنقل --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #eee;
+            display: flex; justify-content: center; gap: 40px; padding: 15px; z-index: 100;
+        }
+        .nav-link { background: none; border: none; font-weight: bold; color: #aaa; cursor: pointer; font-size: 1rem; }
+        .nav-link.active { color: #000; text-decoration: underline; }
 
     </style>
 </head>
 <body>
 
-    <div class="main-container">
+    <div class="app-container">
+        
         <div class="header">
-            <div class="motivators">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/220px-Elon_Musk_Royal_Society_%28crop2%29.jpg" alt="Elon" class="motivator-img">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/220px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg" alt="Jeff" class="motivator-img">
+            <div class="avatars-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/220px-Elon_Musk_Royal_Society_%28crop2%29.jpg" class="avatar-small" alt="Elon">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/220px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg" class="avatar-small" alt="Jeff">
             </div>
-            <h1 style="font-size: 1.5rem;">الروتين اليومي</h1>
-            <div class="date-badge" id="currentDate">--/--/----</div>
+            <h1 style="font-size: 1.2rem;">قائمة المهام</h1>
+            <span class="date-tag" id="headerDate">--/--</span>
         </div>
 
-        <div id="view-today" class="view-section active">
-            <h2 style="font-size:1.2rem; margin-bottom: 15px; color: var(--dark-grey);">مهام اليوم:</h2>
-            <div id="today-tasks-container">
-                </div>
-            <div id="no-tasks-msg" class="empty-msg">
-                لا توجد مهام اليوم.<br>استمتع بوقتك أو أضف مهام جديدة.
+        <div id="viewToday" class="view-section active">
+            <div id="tasksContainer"></div>
+            <div id="emptyState" style="text-align: center; margin-top: 50px; color: #999;">
+                لا توجد مهام.<br>أضف خطتك من صفحة الجدول 📝
             </div>
         </div>
 
-        <div id="view-control" class="view-section">
-            <h2 style="font-size:1.2rem; margin-bottom: 15px;">⚙️ تعديل الجدول الأسبوعي</h2>
+        <div id="viewPlan" class="view-section">
+            <h3 style="margin-bottom: 15px;">تعديل الروتين</h3>
+            <div class="day-scroller" id="dayScroller"></div>
             
-            <div class="control-panel">
-                <div class="day-tabs" id="dayTabs">
-                    </div>
+            <div class="input-box">
+                <input type="text" id="taskName" placeholder="المهمة..">
+                <input type="time" id="taskTime">
+                <button class="btn-add" onclick="addTask()">+</button>
+            </div>
 
-                <div class="add-box">
-                    <input type="text" id="newRoutineTask" placeholder="مهمة جديدة ليوم المحدد..">
-                    <button class="add-btn" onclick="addToRoutine()">+</button>
-                </div>
-
-                <div id="routine-list">
-                    </div>
+            <div>
+                <h4 style="font-size:0.9rem; color:#777; margin-bottom:10px">قائمة يوم <span id="selectedDayLabel">--</span>:</h4>
+                <div id="routineContainer"></div>
             </div>
         </div>
 
-        <div class="bottom-nav">
-            <button class="nav-btn active" onclick="switchTab('today')" id="btn-today">
-                المهام
-                <div class="nav-indicator"></div>
-            </button>
-            <button class="nav-btn" onclick="switchTab('control')" id="btn-control">
-                الجدول
-                <div class="nav-indicator"></div>
-            </button>
+    </div>
+
+    <div class="reward-modal" id="rewardModal">
+        <div class="reward-card">
+            <h2 style="margin-bottom: 10px;">🎉 مذهل!</h2>
+            <img id="rewardImage" src="" class="reward-img">
+            <p class="reward-quote" id="rewardQuote">"..."</p>
+            <p class="reward-author" id="rewardAuthor">-</p>
+            <button class="btn-close-reward" onclick="closeReward()">استمرار</button>
         </div>
     </div>
 
+    <div class="nav-bar">
+        <button class="nav-link active" onclick="switchView('today')" id="btnToday">المهام</button>
+        <button class="nav-link" onclick="switchView('plan')" id="btnPlan">الجدول</button>
+    </div>
+
     <script>
-        // --- إدارة البيانات والوقت ---
-        const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        // --- 1. البيانات ---
+        const rewardsData = [
+            {
+                // إيلون ماسك
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/220px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
+                author: "إيلون ماسك",
+                quotes: [
+                    "عندما يكون شيء ما مهماً بما فيه الكفاية، فإنك تفعله حتى لو كانت الاحتمالات ضدك.",
+                    "الخطوة الأولى هي إثبات أن الشيء ممكن.",
+                    "أعتقد أنه من الممكن للناس العاديين أن يختاروا أن يكونوا استثنائيين.",
+                    "المثابرة مهمة جداً. لا ينبغي أن تستسلم إلا إذا أجبرت على ذلك."
+                ]
+            },
+            {
+                // جيف بيزوز
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/220px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg",
+                author: "جيف بيزوز",
+                quotes: [
+                    "إذا ضاعفت عدد التجارب التي تقوم بها سنوياً، فستضاعف إبداعك.",
+                    "الذكاء هو نعمة، أما اللطف فهو خيار.",
+                    "اعمل بجد، استمتع بوقتك، واصنع التاريخ.",
+                    "في النهاية، نحن خياراتنا."
+                ]
+            }
+        ];
+
+        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const daysAr = {'Sunday': 'الأحد', 'Monday': 'الإثنين', 'Tuesday': 'الثلاثاء', 'Wednesday': 'الأربعاء', 'Thursday': 'الخميس', 'Friday': 'الجمعة', 'Saturday': 'السبت'};
 
-        let routine = JSON.parse(localStorage.getItem('userRoutine')) || {
+        let routine = JSON.parse(localStorage.getItem('routine_v6')) || {
             'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []
         };
-        
-        let completionStatus = JSON.parse(localStorage.getItem('completionStatus')) || {};
-        let selectedDay = 'Sunday';
+        let history = JSON.parse(localStorage.getItem('history_v6')) || {};
+        let currentPlanDay = '';
 
         window.onload = function() {
-            const today = new Date();
-            const dayName = daysMap[today.getDay()];
-            document.getElementById('currentDate').innerText = `${daysAr[dayName]} | ${today.toLocaleDateString('ar-SA')}`;
-            selectedDay = dayName;
-            
-            renderDayTabs();
-            renderRoutineList();
-            syncAndRenderToday();
+            const now = new Date();
+            const dayName = daysEn[now.getDay()];
+            document.getElementById('headerDate').innerText = `${daysAr[dayName]} | ${now.toLocaleDateString('ar-SA')}`;
+            currentPlanDay = dayName;
+
+            renderDayScroller();
+            renderRoutine();
+            renderToday();
         };
 
-        function syncAndRenderToday() {
-            const todayIndex = new Date().getDay();
-            const todayName = daysMap[todayIndex];
-            const dateKey = new Date().toLocaleDateString('en-CA');
+        // --- 2. المهام والتحقق من الإنجاز ---
+        function renderToday() {
+            const now = new Date();
+            const dayName = daysEn[now.getDay()];
+            const dateKey = now.toLocaleDateString('en-CA');
+            const list = document.getElementById('tasksContainer');
+            const tasks = routine[dayName] || [];
 
-            const container = document.getElementById('today-tasks-container');
-            const tasks = routine[todayName] || [];
+            list.innerHTML = '';
+            document.getElementById('emptyState').style.display = tasks.length === 0 ? 'block' : 'none';
 
-            container.innerHTML = '';
+            tasks.sort((a, b) => (a.time || '23:59').localeCompare(b.time || '23:59'));
 
-            if (tasks.length === 0) {
-                document.getElementById('no-tasks-msg').style.display = 'block';
-                return;
-            } else {
-                document.getElementById('no-tasks-msg').style.display = 'none';
-            }
+            let completedCount = 0;
 
-            tasks.forEach((taskText) => {
-                const uniqueKey = `${dateKey}-${taskText}`;
-                const isDone = completionStatus[uniqueKey] === true;
+            tasks.forEach(task => {
+                const uid = `${dateKey}_${task.name}_${task.time}`;
+                const isDone = history[uid] === true;
+                if(isDone) completedCount++;
 
                 const div = document.createElement('div');
-                div.className = `task-card ${isDone ? 'completed' : ''}`;
-                // هنا التغيير: الرمز ○ للفراغ و ✔ للإنجاز
+                div.className = `task-card ${isDone ? 'done' : ''}`;
                 div.innerHTML = `
                     <div class="task-info">
-                        <strong>${taskText}</strong>
+                        <h3>${task.name}</h3>
+                        ${task.time ? `<span class="task-time">⏰ ${formatTime(task.time)}</span>` : ''}
                     </div>
-                    <button class="status-btn ${isDone ? 'done' : 'not-done'}" onclick="toggleStatus('${uniqueKey}')">
-                        ${isDone ? '✔' : '○'}
-                    </button>
+                    <button class="check-btn" onclick="toggleTask('${uid}')">✔</button>
                 `;
-                container.appendChild(div);
+                list.appendChild(div);
             });
-        }
 
-        function toggleStatus(uniqueKey) {
-            if (completionStatus[uniqueKey]) {
-                completionStatus[uniqueKey] = false;
-            } else {
-                completionStatus[uniqueKey] = true;
+            // التحقق من الإنجاز الكامل (Trigger)
+            if (tasks.length > 0 && completedCount === tasks.length) {
+                // نستخدم SetTimeout لنتأكد أن المستخدم رأى علامة الصح أولاً
+                setTimeout(() => {
+                    showReward();
+                }, 500);
             }
-            localStorage.setItem('completionStatus', JSON.stringify(completionStatus));
-            syncAndRenderToday();
         }
 
-        // --- دوال لوحة التحكم ---
-        function renderDayTabs() {
-            const container = document.getElementById('dayTabs');
-            container.innerHTML = '';
-            
+        function toggleTask(id) {
+            history[id] = !history[id];
+            localStorage.setItem('history_v6', JSON.stringify(history));
+            renderToday();
+        }
+
+        // --- 3. نافذة المكافأة ---
+        function showReward() {
+            // التحقق هل تم عرض المكافأة اليوم بالفعل؟ (اختياري، هنا سنجعلها تظهر كل مرة يكمل فيها)
+            const randomPerson = rewardsData[Math.floor(Math.random() * rewardsData.length)];
+            const randomQuote = randomPerson.quotes[Math.floor(Math.random() * randomPerson.quotes.length)];
+
+            document.getElementById('rewardImage').src = randomPerson.img;
+            document.getElementById('rewardQuote').innerText = `"${randomQuote}"`;
+            document.getElementById('rewardAuthor').innerText = `- ${randomPerson.author}`;
+
+            document.getElementById('rewardModal').style.display = 'flex';
+        }
+
+        function closeReward() {
+            document.getElementById('rewardModal').style.display = 'none';
+        }
+
+        // --- 4. إدارة الجدول ---
+        function renderDayScroller() {
+            const box = document.getElementById('dayScroller');
+            box.innerHTML = '';
             const todayIdx = new Date().getDay();
-            const sortedDays = [...daysMap.slice(todayIdx), ...daysMap.slice(0, todayIdx)];
+            const sorted = [...daysEn.slice(todayIdx), ...daysEn.slice(0, todayIdx)];
 
-            sortedDays.forEach(day => {
-                const btn = document.createElement('div');
-                btn.className = `day-tab ${day === selectedDay ? 'active' : ''}`;
-                btn.innerText = daysAr[day];
-                btn.onclick = () => {
-                    selectedDay = day;
-                    renderDayTabs();
-                    renderRoutineList();
+            sorted.forEach(day => {
+                const chip = document.createElement('div');
+                chip.className = `day-chip ${day === currentPlanDay ? 'active' : ''}`;
+                chip.innerText = daysAr[day];
+                chip.onclick = () => {
+                    currentPlanDay = day;
+                    renderDayScroller();
+                    renderRoutine();
                 };
-                container.appendChild(btn);
+                box.appendChild(chip);
             });
         }
 
-        function renderRoutineList() {
-            const list = document.getElementById('routine-list');
-            const tasks = routine[selectedDay];
+        function renderRoutine() {
+            document.getElementById('selectedDayLabel').innerText = daysAr[currentPlanDay];
+            const list = document.getElementById('routineContainer');
+            const tasks = routine[currentPlanDay] || [];
             list.innerHTML = '';
+            
+            if(tasks.length === 0) list.innerHTML = '<div style="color:#ccc; font-size:0.8rem">فارغ</div>';
 
-            if(tasks.length === 0) {
-                list.innerHTML = '<div style="padding:20px; color:#999; text-align:center; font-size:0.9rem;">اضغط علامة + لإضافة مهام لهذا اليوم</div>';
-                return;
-            }
-
-            tasks.forEach((task, index) => {
-                const item = document.createElement('div');
-                item.className = 'routine-item';
-                item.innerHTML = `
-                    <span>${task}</span>
-                    <button class="del-btn" onclick="deleteFromRoutine(${index})">حذف</button>
+            tasks.forEach((task, idx) => {
+                const div = document.createElement('div');
+                div.className = 'routine-item';
+                div.innerHTML = `
+                    <div><strong>${task.name}</strong> <small style="color:#aaa">${formatTime(task.time)}</small></div>
+                    <span class="btn-del" onclick="delTask(${idx})">حذف</span>
                 `;
-                list.appendChild(item);
+                list.appendChild(div);
             });
         }
 
-        function addToRoutine() {
-            const input = document.getElementById('newRoutineTask');
-            const taskText = input.value.trim();
+        function addTask() {
+            const name = document.getElementById('taskName').value.trim();
+            const time = document.getElementById('taskTime').value;
+            if(!name) return;
+
+            routine[currentPlanDay].push({name, time});
+            localStorage.setItem('routine_v6', JSON.stringify(routine));
+            document.getElementById('taskName').value = '';
             
-            if (!taskText) return alert("اكتب اسم المهمة!");
+            renderRoutine();
+            if(currentPlanDay === daysEn[new Date().getDay()]) renderToday();
+        }
 
-            routine[selectedDay].push(taskText);
-            saveRoutine();
-            renderRoutineList();
-            input.value = '';
-
-            const todayName = daysMap[new Date().getDay()];
-            if (selectedDay === todayName) {
-                syncAndRenderToday();
+        function delTask(idx) {
+            if(confirm('حذف؟')) {
+                routine[currentPlanDay].splice(idx, 1);
+                localStorage.setItem('routine_v6', JSON.stringify(routine));
+                renderRoutine();
+                if(currentPlanDay === daysEn[new Date().getDay()]) renderToday();
             }
         }
 
-        function deleteFromRoutine(index) {
-            if(confirm("حذف هذه المهمة؟")) {
-                routine[selectedDay].splice(index, 1);
-                saveRoutine();
-                renderRoutineList();
-
-                const todayName = daysMap[new Date().getDay()];
-                if (selectedDay === todayName) {
-                    syncAndRenderToday();
-                }
-            }
+        // --- أدوات ---
+        function formatTime(t) {
+            if(!t) return '';
+            let [h, m] = t.split(':');
+            let ampm = h >= 12 ? 'م' : 'ص';
+            h = h % 12 || 12;
+            return `${h}:${m} ${ampm}`;
         }
 
-        function saveRoutine() {
-            localStorage.setItem('userRoutine', JSON.stringify(routine));
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-
-            if (tab === 'today') {
-                document.getElementById('view-today').classList.add('active');
-                document.getElementById('btn-today').classList.add('active');
-                syncAndRenderToday();
+        function switchView(v) {
+            document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(e => e.classList.remove('active'));
+            
+            if(v === 'today') {
+                document.getElementById('viewToday').classList.add('active');
+                document.getElementById('btnToday').classList.add('active');
+                renderToday();
             } else {
-                document.getElementById('view-control').classList.add('active');
-                document.getElementById('btn-control').classList.add('active');
+                document.getElementById('viewPlan').classList.add('active');
+                document.getElementById('btnPlan').classList.add('active');
             }
         }
     </script>
 </body>
 </html>
-
