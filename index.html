@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روتين العظماء - V10 Certificate</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Cinzel:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <title>روتين العظماء - V11 (No Images)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Great+Vibes&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        /* إيقاف الترجمة */
         .notranslate { transform: translate(0); }
-
         :root {
             --bg-main: #f0f2f5;
             --bg-card: #ffffff;
             --text-primary: #1a1a1a;
             --accent-black: #000000;
-            --gold: #d4af37; /* لون ذهبي للشهادة */
+            --gold: #c5a028; /* لون ذهبي داكن للختم */
             --success: #27ae60;
         }
 
@@ -32,15 +30,15 @@
             box-shadow: 0 0 25px rgba(0,0,0,0.08); position: relative;
         }
 
-        /* --- الهيدر الفني (Sketch Style) --- */
+        /* --- الهيدر --- */
         .sketch-header {
             position: relative; height: 260px; background: #222; overflow: hidden;
             border-bottom: 4px solid var(--accent-black);
         }
+        /* صورة خلفية ثابتة من مصدر موثوق */
         .sketch-img {
             width: 100%; height: 100%; object-fit: cover;
-            filter: grayscale(100%) contrast(110%); /* تأثير الرسم */
-            opacity: 0.9;
+            filter: grayscale(100%) contrast(110%); opacity: 0.9;
         }
         .header-content {
             position: absolute; bottom: 0; left: 0; width: 100%;
@@ -49,11 +47,11 @@
         }
         .avatars-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
         .mini-avatar {
-            width: 60px; height: 60px; border-radius: 50%; border: 2px solid #fff;
-            object-fit: cover; filter: grayscale(100%);
+            width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff;
+            object-fit: cover; filter: grayscale(100%); background: #fff;
         }
 
-        /* --- شاشة المهام --- */
+        /* --- المهام --- */
         .view-section { display: none; padding: 20px; animation: fadeIn 0.5s; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
@@ -74,82 +72,94 @@
         }
         .task-card.done .check-btn { background: var(--success); border-color: var(--success); color: white; }
 
-        /* --- تصميم الشهادة (Certificate Design) --- */
+        /* --- تصميم الشهادة (بدون صور خارجية) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.9); z-index: 2000;
             display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(5px);
         }
 
         .certificate-paper {
-            background: #fffdf0; /* لون ورق كريمي */
+            background: #fff;
             width: 90%; max-width: 500px;
-            padding: 30px;
-            border: 10px double var(--accent-black); /* إطار مزدوج كلاسيكي */
+            padding: 40px 30px;
+            border: 8px double #111; /* إطار كلاسيكي */
             text-align: center;
             position: relative;
-            box-shadow: 0 0 50px rgba(255, 215, 0, 0.2);
-            background-image: url("https://www.transparenttextures.com/patterns/cream-paper.png");
+            box-shadow: 0 0 60px rgba(0,0,0,0.5);
         }
 
-        /* زخارف الزوايا */
+        /* زخرفة الزوايا الذهبية */
         .corner {
-            position: absolute; width: 40px; height: 40px;
-            border-top: 4px solid var(--gold); border-left: 4px solid var(--gold);
+            position: absolute; width: 30px; height: 30px;
+            border-top: 5px solid var(--gold); border-left: 5px solid var(--gold);
         }
-        .tr { top: 10px; right: 10px; transform: rotate(90deg); }
-        .tl { top: 10px; left: 10px; }
-        .br { bottom: 10px; right: 10px; transform: rotate(180deg); }
-        .bl { bottom: 10px; left: 10px; transform: rotate(-90deg); }
+        .tr { top: 15px; right: 15px; transform: rotate(90deg); }
+        .tl { top: 15px; left: 15px; }
+        .br { bottom: 15px; right: 15px; transform: rotate(180deg); }
+        .bl { bottom: 15px; left: 15px; transform: rotate(-90deg); }
 
-        .cert-title {
-            font-family: 'Cinzel', serif; /* خط كلاسيكي للشهادات */
-            font-size: 2rem; color: var(--accent-black);
-            margin-bottom: 5px; text-transform: uppercase; letter-spacing: 2px;
-            border-bottom: 2px solid var(--gold); display: inline-block;
-            padding-bottom: 10px;
+        .cert-header {
+            font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700;
+            color: #111; text-transform: uppercase; letter-spacing: 2px;
+            border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 10px; margin-bottom: 20px;
         }
 
-        .cert-body { font-size: 1.1rem; margin: 20px 0; color: #444; line-height: 1.6; }
-        .cert-name { font-weight: 900; font-size: 1.5rem; color: var(--accent-black); display: block; margin: 10px 0; }
+        .cert-text { font-size: 1.1rem; color: #555; margin-bottom: 10px; }
+        .cert-name { font-size: 1.8rem; font-weight: 900; color: #000; margin: 10px 0; display: block; }
+        .cert-date { font-weight: bold; color: #333; font-family: 'Courier New', monospace; }
+
+        /* التوقيع والختم (بالكود فقط) */
+        .signature-section {
+            display: flex; justify-content: space-around; align-items: flex-end; margin-top: 40px;
+        }
         
-        .signature-area {
-            margin-top: 30px; display: flex; justify-content: space-around; align-items: end;
+        .sig-block { text-align: center; width: 45%; }
+        
+        /* محاكاة التوقيع بخط اليد */
+        .digital-signature {
+            font-family: 'Great Vibes', cursive; /* خط التوقيع */
+            font-size: 2.5rem;
+            color: #002244; /* لون الحبر الأزرق الداكن */
+            transform: rotate(-5deg);
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
         }
-        .sig-block { text-align: center; }
-        .signature-img { width: 120px; height: auto; display: block; margin: 0 auto 5px; filter: brightness(0.2); }
-        .sig-line { width: 140px; height: 1px; background: #000; margin: 0 auto 5px; }
-        .sig-name { font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: bold; }
 
-        .quote-box {
-            margin-top: 20px; padding: 10px; background: #f9f9f9; border-left: 3px solid var(--gold);
-            font-style: italic; font-size: 0.9rem; color: #555;
+        .sig-line { height: 2px; background: #333; width: 100%; margin: 0 auto; }
+        .sig-label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
+
+        /* رسم الختم الذهبي بالكود */
+        .official-seal {
+            width: 80px; height: 80px;
+            border: 3px solid var(--gold);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 5px;
+            color: var(--gold);
+            font-weight: bold;
+            font-family: serif;
+            box-shadow: 0 0 10px rgba(197, 160, 40, 0.2);
+            position: relative;
+        }
+        .seal-inner {
+            border: 1px dashed var(--gold);
+            width: 70px; height: 70px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 2rem;
         }
 
-        .action-btns { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
-        .btn-cert {
-            padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
-            display: flex; align-items: center; gap: 5px;
-        }
-        .btn-print { background: var(--accent-black); color: var(--gold); }
+        .action-btns { margin-top: 30px; display: flex; gap: 10px; justify-content: center; }
+        .btn-act { padding: 12px 25px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .btn-print { background: #000; color: #fff; }
         .btn-close { background: #eee; color: #333; }
 
-        /* --- الطباعة (CSS Print Media) --- */
         @media print {
-            body * { visibility: hidden; } /* إخفاء كل شيء */
-            .modal-overlay, .certificate-paper, .certificate-paper * {
-                visibility: visible; /* إظهار الشهادة فقط */
-            }
-            .modal-overlay {
-                position: absolute; left: 0; top: 0; background: none;
-                align-items: flex-start; padding: 0;
-            }
-            .certificate-paper {
-                box-shadow: none; width: 100%; max-width: 100%; border: 5px solid #000;
-                position: absolute; left: 0; top: 0;
-            }
-            .action-btns { display: none; } /* إخفاء الأزرار عند الطباعة */
+            body * { visibility: hidden; }
+            .modal-overlay, .certificate-paper, .certificate-paper * { visibility: visible; }
+            .modal-overlay { position: absolute; left: 0; top: 0; background: none; }
+            .certificate-paper { box-shadow: none; border: 5px solid #000; width: 100%; position: absolute; left: 0; top: 0; }
+            .action-btns { display: none; }
         }
 
         /* --- أدوات التحكم --- */
@@ -171,13 +181,13 @@
     <div class="app-container">
         
         <div class="sketch-header">
-            <img src="https://images.unsplash.com/photo-1546823377-632b7858c2b7?q=80&w=1000&auto=format&fit=crop" class="sketch-img">
+            <img src="https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=1000&auto=format&fit=crop" class="sketch-img">
             <div class="header-content">
                 <div class="avatars-row">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/800px-Elon_Musk_Royal_Society_%28crop2%29.jpg" class="mini-avatar">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/800px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg" class="mini-avatar">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/220px-Elon_Musk_Royal_Society_%28crop2%29.jpg" class="mini-avatar">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/220px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg" class="mini-avatar">
                 </div>
-                <h1 style="font-size: 1.5rem; font-weight: 900;">التزام العظماء</h1>
+                <h1 style="font-size: 1.5rem; font-weight: 900;">روتين العظماء</h1>
                 <p id="headerDate" style="opacity: 0.8; font-size: 0.9rem;">--/--/----</p>
             </div>
         </div>
@@ -201,44 +211,41 @@
             <div id="routineList"></div>
         </div>
 
-    </div>
+        <div class="modal-overlay" id="certModal">
+            <div class="certificate-paper">
+                <div class="corner tl"></div><div class="corner tr"></div>
+                <div class="corner bl"></div><div class="corner br"></div>
 
-    <div class="modal-overlay" id="certModal">
-        <div class="certificate-paper">
-            <div class="corner tl"></div><div class="corner tr"></div>
-            <div class="corner bl"></div><div class="corner br"></div>
+                <div class="cert-header">Certificate of Completion</div>
 
-            <div class="cert-title">Certificate of Completion</div>
-            <div style="font-family: 'Great Vibes', cursive; font-size: 1.5rem; color: #666; margin-top: -5px;">Daily Achievement Award</div>
-
-            <div class="cert-body">
-                يشهد هذا بأن الأسطورة
-                <span class="cert-name" id="userName">المُنجز المثابر</span>
-                قد أتم بنجاح جميع المهام المجدولة لتاريخ
-                <span id="certDate" style="font-weight:bold; color:#000;">--/--/----</span>
-            </div>
-
-            <div class="quote-box" id="certQuote">
-                "..."
-            </div>
-
-            <div class="signature-area">
-                <div class="sig-block">
-                    <img id="sigImage" src="" class="signature-img">
-                    <div class="sig-line"></div>
-                    <div class="sig-name" id="sigName">Signature</div>
+                <div class="cert-text">
+                    يشهد هذا بأن الأسطورة
+                    <span class="cert-name" id="userName">المُنجز المثابر</span>
+                    قد أتم بنجاح جميع المهام المجدولة لتاريخ
+                    <span id="certDate" class="cert-date">--/--/----</span>
                 </div>
-                <div class="sig-block">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Infobox_info_icon.svg/1200px-Infobox_info_icon.svg.png" style="width:40px; opacity:0.1; margin-bottom:10px;">
-                    <div class="sig-name">Official Seal</div>
-                </div>
-            </div>
 
-            <div class="action-btns">
-                <button class="btn-cert btn-print" onclick="window.print()">🖨️ طباعة وتعليق</button>
-                <button class="btn-cert btn-close" onclick="closeCert()">إغلاق</button>
+                <div class="signature-section">
+                    <div class="sig-block">
+                        <div class="digital-signature" id="sigText">Elon Musk</div>
+                        <div class="sig-line"></div>
+                        <div class="sig-label">Signature</div>
+                    </div>
+                    <div class="sig-block">
+                        <div class="official-seal">
+                            <div class="seal-inner">★</div>
+                        </div>
+                        <div class="sig-label">Official Seal</div>
+                    </div>
+                </div>
+
+                <div class="action-btns">
+                    <button class="btn-act btn-print" onclick="window.print()">🖨️ طباعة الشهادة</button>
+                    <button class="btn-act btn-close" onclick="closeCert()">إغلاق</button>
+                </div>
             </div>
         </div>
+
     </div>
 
     <div class="navbar">
@@ -247,26 +254,12 @@
     </div>
 
     <script>
-        // --- البيانات ---
-        // توقيعات حقيقية بصيغة SVG (شفافة)
-        const signatures = {
-            elon: {
-                src: "https://upload.wikimedia.org/wikipedia/commons/e/ed/Elon_Musk_Signature.svg",
-                name: "Elon Musk",
-                quotes: ["When something is important enough, you do it even if the odds are not in your favor.", "I think it is possible for ordinary people to choose to be extraordinary."]
-            },
-            jeff: {
-                src: "https://upload.wikimedia.org/wikipedia/commons/f/f7/Jeff_Bezos_signature.svg",
-                name: "Jeff Bezos",
-                quotes: ["Work hard, have fun, make history.", "If you double the number of experiments you do per year you’re going to double your inventiveness."]
-            }
-        };
-
+        // --- الإعدادات ---
         const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const daysAr = {'Sunday': 'الأحد', 'Monday': 'الإثنين', 'Tuesday': 'الثلاثاء', 'Wednesday': 'الأربعاء', 'Thursday': 'الخميس', 'Friday': 'الجمعة', 'Saturday': 'السبت'};
         
-        let routine = JSON.parse(localStorage.getItem('routine_v10')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_v10')) || {};
+        let routine = JSON.parse(localStorage.getItem('routine_v11')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_v11')) || {};
         let currentPlanDay = '';
 
         window.onload = function() {
@@ -274,20 +267,15 @@
             const dayName = daysEn[now.getDay()];
             document.getElementById('headerDate').innerText = `${daysAr[dayName]} | ${now.toLocaleDateString('ar-SA')}`;
             currentPlanDay = dayName;
-            
-            renderScroller();
-            renderRoutine();
-            renderToday();
+            renderScroller(); renderRoutine(); renderToday();
         };
 
-        // --- إدارة المهام والشهادة ---
         function renderToday() {
             const now = new Date();
             const dayName = daysEn[now.getDay()];
             const dateKey = now.toLocaleDateString('en-CA');
             const list = document.getElementById('tasksList');
             const tasks = routine[dayName] || [];
-
             list.innerHTML = '';
             document.getElementById('emptyToday').style.display = tasks.length === 0 ? 'block' : 'none';
 
@@ -302,51 +290,35 @@
                 const div = document.createElement('div');
                 div.className = `task-card ${isDone ? 'done' : ''}`;
                 div.innerHTML = `
-                    <div>
-                        <h3 style="margin:0">${task.name}</h3>
-                        <small style="color:#888">${tConvert(task.time)}</small>
-                    </div>
+                    <div><h3 style="margin:0">${task.name}</h3><small style="color:#888">${tConvert(task.time)}</small></div>
                     <button class="check-btn" onclick="toggleTask('${uid}')">✔</button>
                 `;
                 list.appendChild(div);
             });
 
-            // التحقق من استحقاق الشهادة
+            // التحقق من الشهادة
             if (tasks.length > 0 && completedCount === tasks.length) {
-                // تأخير بسيط لإظهار الشهادة
-                setTimeout(() => {
-                    showCertificate(dateKey);
-                }, 600);
+                setTimeout(() => { showCertificate(dateKey); }, 600);
             }
         }
 
         function showCertificate(date) {
-            // اختيار عشوائي (إيلون أو جيف)
-            const isElon = Math.random() > 0.5;
-            const person = isElon ? signatures.elon : signatures.jeff;
-            const quote = person.quotes[Math.floor(Math.random() * person.quotes.length)];
-
-            // تعبئة البيانات
-            document.getElementById('certDate').innerText = new Date().toLocaleDateString('en-GB'); // تنسيق يوم/شهر/سنة
-            document.getElementById('sigImage').src = person.src;
-            document.getElementById('sigName').innerText = person.name;
-            document.getElementById('certQuote').innerText = `"${quote}"`;
-
-            // إظهار النافذة
+            // اختيار عشوائي لاسم الموقع (إيلون أو جيف)
+            const signer = Math.random() > 0.5 ? "Elon Musk" : "Jeff Bezos";
+            
+            document.getElementById('certDate').innerText = new Date().toLocaleDateString('en-GB');
+            document.getElementById('sigText').innerText = signer; // كتابة الاسم بخط التوقيع
             document.getElementById('certModal').style.display = 'flex';
         }
 
-        function closeCert() {
-            document.getElementById('certModal').style.display = 'none';
-        }
+        function closeCert() { document.getElementById('certModal').style.display = 'none'; }
 
         function toggleTask(id) {
             history[id] = !history[id];
-            localStorage.setItem('history_v10', JSON.stringify(history));
+            localStorage.setItem('history_v11', JSON.stringify(history));
             renderToday();
         }
 
-        // --- بقية الوظائف (الجدول) ---
         function renderScroller() {
             const box = document.getElementById('dayScroller'); box.innerHTML = '';
             const todayIdx = new Date().getDay();
@@ -375,14 +347,14 @@
             const time = document.getElementById('timeInput').value;
             if(!name) return;
             routine[currentPlanDay].push({name, time});
-            localStorage.setItem('routine_v10', JSON.stringify(routine));
+            localStorage.setItem('routine_v11', JSON.stringify(routine));
             document.getElementById('taskInput').value = '';
             renderRoutine();
             if(currentPlanDay === daysEn[new Date().getDay()]) renderToday();
         }
         function delTask(idx) {
             routine[currentPlanDay].splice(idx, 1);
-            localStorage.setItem('routine_v10', JSON.stringify(routine));
+            localStorage.setItem('routine_v11', JSON.stringify(routine));
             renderRoutine();
             if(currentPlanDay === daysEn[new Date().getDay()]) renderToday();
         }
