@@ -3,118 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>روتين العظماء - V8 Sketch & Stats</title>
+    <title>روتين العظماء - V9 Final</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
+        /* يمنع المتصفح من ترجمة الكود */
+        .notranslate { transform: translate(0); }
+
         :root {
-            --bg-main: #f4f4f9;
+            --bg-main: #f8f9fa;
             --bg-card: #ffffff;
-            --text-primary: #222222;
-            --text-secondary: #666666;
-            --border-color: #e0e0e0;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --border-color: #dddddd;
             --accent-black: #000000;
-            --success-green: #27ae60; /* لون الإنجاز الوحيد */
+            --success-green: #27ae60;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
 
         body {
             background-color: var(--bg-main); color: var(--text-primary);
-            min-height: 100vh; display: flex; justify-content: center; padding-bottom: 80px;
+            min-height: 100vh; display: flex; justify-content: center; padding-bottom: 90px;
         }
 
         .app-container {
             width: 100%; max-width: 600px; background: var(--bg-card); min-height: 100vh;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05); position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1); position: relative;
         }
 
-        /* --- قسم رأس الصفحة (السكتش والاقتباس) --- */
+        /* --- الهيدر السكتش (محسن) --- */
         .sketch-header {
             position: relative;
-            height: 280px;
-            background: #000;
+            height: 300px;
+            background: #222; /* لون احتياطي في حال تأخر الصورة */
             overflow: hidden;
-            border-bottom: 3px solid var(--accent-black);
+            border-bottom: 4px solid var(--accent-black);
         }
 
         .sketch-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* السحر هنا: تحويل الصورة لستايل رسم بقلم الرصاص */
-            filter: grayscale(100%) contrast(200%) brightness(1.2) sharp(10px);
-            opacity: 0.8;
+            /* فلتر سكتش متوازن: أبيض وأسود مع تباين */
+            filter: grayscale(100%) contrast(120%) brightness(0.9);
+            transition: transform 10s ease;
         }
+        /* حركة بطيئة للصورة */
+        .sketch-header:hover .sketch-img { transform: scale(1.1); }
 
         .quote-overlay {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 20px; color: #fff;
+            background: linear-gradient(to top, #000000, transparent);
+            padding: 25px 20px; color: #fff;
+            text-align: center;
         }
-        .quote-text { font-size: 1.1rem; font-weight: 700; line-height: 1.5; text-shadow: 1px 1px 3px #000; }
-        .quote-author { font-size: 0.9rem; color: #ccc; margin-top: 5px; }
         
-        .date-bar {
-            background: #fff; padding: 10px 20px; text-align: center; border-bottom: 1px solid var(--border-color); font-weight: bold;
+        .quote-text { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            line-height: 1.6; 
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .quote-author { 
+            font-size: 0.9rem; 
+            color: #ddd; 
+            font-weight: 400;
+            letter-spacing: 1px;
         }
 
-        /* --- القوائم والعرض --- */
-        .view-section { display: none; padding: 20px; animation: fadeUp 0.3s ease; }
-        .view-section.active { display: block; }
-        @keyframes fadeUp { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
+        .date-bar {
+            background: #fff; padding: 12px; text-align: center; 
+            border-bottom: 1px solid #eee; font-weight: 800; font-size: 1.1rem;
+            letter-spacing: -0.5px;
+        }
 
-        /* كارت المهمة (اليوم) */
+        /* --- المحتوى --- */
+        .view-section { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
+
+        /* كارت المهمة */
         .task-card {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 15px; border: 1px solid var(--border-color); border-radius: 12px;
-            margin-bottom: 10px; background: #fff; transition: 0.2s;
+            padding: 18px; border: 1px solid #eee; border-radius: 16px;
+            margin-bottom: 12px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: 0.2s;
         }
-        .task-info h3 { font-size: 1rem; font-weight: 700; }
-        .task-time { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 5px; }
+        
+        .task-info h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+        .task-time { font-size: 0.85rem; color: #888; display: flex; align-items: center; gap: 5px; }
 
         .check-btn {
-            width: 35px; height: 35px; border-radius: 50%; border: 2px solid #ccc;
+            width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ddd;
             background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            color: transparent; font-size: 1.2rem; transition: 0.2s;
+            color: transparent; font-size: 1.3rem; transition: 0.2s;
         }
-        .check-btn:hover { border-color: var(--accent-black); }
+        .check-btn:hover { border-color: #000; }
 
-        .task-card.done { background: #f9f9f9; border-color: #eee; }
+        .task-card.done { background: #f8fff9; border-color: #c3e6cb; }
         .task-card.done h3 { text-decoration: line-through; color: #aaa; }
         .task-card.done .check-btn { background: var(--success-green); border-color: var(--success-green); color: white; }
 
-        /* --- قسم الإحصائيات (جديد) --- */
-        .stats-container {
-            background: #fff; padding: 25px; border-radius: 15px; border: 1px solid var(--border-color);
-            text-align: center;
+        /* --- الإحصائيات --- */
+        .stats-box {
+            background: #fff; padding: 30px; border-radius: 20px;
+            border: 1px solid #eee; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
-        .chart-wrapper { position: relative; height: 250px; width: 250px; margin: 0 auto 20px; }
-        .stats-summary { display: flex; justify-content: space-around; margin-top: 20px; }
-        .stat-box h4 { font-size: 2rem; font-weight: 900; }
-        .stat-box span { font-size: 0.9rem; color: var(--text-secondary); }
+        .chart-container { position: relative; height: 220px; width: 220px; margin: 0 auto 20px; }
+        .stats-numbers { display: flex; justify-content: space-around; margin-top: 25px; padding-top: 20px; border-top: 1px solid #eee; }
+        .stat-item h4 { font-size: 1.8rem; font-weight: 900; margin-bottom: 5px; }
+        .stat-item span { color: #777; font-size: 0.9rem; }
 
-        /* --- أدوات التخطيط --- */
-        .day-scroller { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
-        .day-scroller::-webkit-scrollbar { display: none; }
-        .day-chip { padding: 8px 18px; background: #eee; border-radius: 30px; font-size: 0.9rem; white-space: nowrap; cursor: pointer; font-weight: 600; }
-        .day-chip.active { background: var(--accent-black); color: #fff; }
-        .input-box { display: flex; gap: 10px; margin-bottom: 20px; }
-        .input-box input { flex: 1; padding: 12px; border: 2px solid #eee; border-radius: 8px; outline: none; }
-        .input-box input:focus { border-color: var(--accent-black); }
-        .btn-add { background: var(--accent-black); color: #fff; border: none; padding: 0 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .routine-item { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; }
-        .btn-del { color: var(--text-secondary); cursor: pointer; font-size: 0.85rem; text-decoration: underline; }
+        /* --- أدوات التحكم --- */
+        .day-scroller { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
+        .day-chip { padding: 10px 20px; background: #f1f1f1; border-radius: 50px; font-size: 0.9rem; white-space: nowrap; cursor: pointer; font-weight: 700; color: #555; transition: 0.2s; }
+        .day-chip.active { background: #000; color: #fff; transform: scale(1.05); }
 
-        /* --- التنقل السفلي --- */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #eee;
-            display: flex; justify-content: space-around; padding: 10px; z-index: 100;
+        .input-area { display: flex; gap: 10px; margin-bottom: 20px; }
+        .input-area input { flex: 1; padding: 14px; border: 2px solid #eee; border-radius: 12px; outline: none; font-size: 1rem; }
+        .input-area input:focus { border-color: #000; }
+        .btn-add { background: #000; color: #fff; border: none; padding: 0 25px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+        .routine-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #f5f5f5; align-items: center; }
+        .btn-del { color: #ff4757; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+
+        /* --- النافبار --- */
+        .navbar {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: #fff;
+            border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 12px; z-index: 999;
         }
-        .nav-link { background: none; border: none; font-weight: 700; color: #aaa; cursor: pointer; font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; }
-        .nav-link.active { color: var(--accent-black); }
-        .nav-icon { font-size: 1.2rem; margin-bottom: 2px; }
+        .nav-btn { background: none; border: none; color: #bbb; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; font-weight: 700; font-size: 0.8rem; }
+        .nav-btn.active { color: #000; }
+        .nav-icon { font-size: 1.4rem; margin-bottom: 2px; }
 
     </style>
 </head>
@@ -123,284 +148,321 @@
     <div class="app-container">
         
         <div class="sketch-header">
-            <img id="dailySketchBtn" src="" class="sketch-img">
+            <img id="headerImage" src="" class="sketch-img" onerror="this.src='https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=1000&auto=format&fit=crop'">
             <div class="quote-overlay">
-                <p class="quote-text" id="dailyQuote">...</p>
-                <p class="quote-author" id="dailyAuthor">...</p>
+                <p class="quote-text" id="headerQuote">...</p>
+                <p class="quote-author" id="headerAuthor">...</p>
             </div>
         </div>
-        <div class="date-bar" id="headerDate">--/--/----</div>
+
+        <div class="date-bar" id="dateBar">--/--/----</div>
 
         <div id="viewToday" class="view-section active">
-            <h2 style="margin-bottom: 15px;">قائمة اليوم</h2>
-            <div id="tasksContainer"></div>
-            <div id="emptyState" style="text-align: center; margin-top: 40px; color: #999;">
-                لا توجد مهام اليوم.<br>أضف روتينك من صفحة الجدول.
+            <h2 style="margin-bottom: 20px;">مهام اليوم 📝</h2>
+            <div id="tasksList"></div>
+            <div id="emptyToday" style="text-align: center; margin-top: 50px; color: #999;">
+                لا توجد مهام.<br>أضف روتينك من الجدول 👇
             </div>
         </div>
 
         <div id="viewPlan" class="view-section">
-            <h3 style="margin-bottom: 15px;">تخطيط الروتين</h3>
+            <h3 style="margin-bottom: 20px;">تعديل الجدول 📅</h3>
             <div class="day-scroller" id="dayScroller"></div>
             
-            <div class="input-box">
-                <input type="text" id="taskName" placeholder="المهمة..." style="flex:2">
-                <input type="time" id="taskTime" style="flex:1">
+            <div class="input-area">
+                <input type="text" id="taskInput" placeholder="اسم المهمة..." style="flex: 2;">
+                <input type="time" id="timeInput" style="flex: 1;">
                 <button class="btn-add" onclick="addTask()">+</button>
             </div>
 
             <div>
-                <h4 style="font-size:0.9rem; color:#777; margin-bottom:10px">روتين يوم <span id="selectedDayLabel">--</span>:</h4>
-                <div id="routineContainer"></div>
+                <h4 style="margin-bottom: 10px; color: #777; font-size: 0.9rem;">جدول يوم <span id="selectedDayName">--</span>:</h4>
+                <div id="routineList"></div>
             </div>
         </div>
 
         <div id="viewStats" class="view-section">
-            <h3 style="margin-bottom: 20px;">أداؤك هذا الشهر</h3>
-            
-            <div class="stats-container">
-                <div class="chart-wrapper">
-                    <canvas id="monthlyChart"></canvas>
+            <h3 style="margin-bottom: 20px;">إحصائياتك 📊</h3>
+            <div class="stats-box">
+                <div class="chart-container">
+                    <canvas id="myChart"></canvas>
                 </div>
-                
-                <div class="stats-summary">
-                    <div class="stat-box">
-                        <h4 id="totalDoneMonth" style="color: var(--success-green)">0</h4>
-                        <span>مكتملة</span>
+                <div class="stats-numbers">
+                    <div class="stat-item">
+                        <h4 id="statDone" style="color: var(--success-green)">0</h4>
+                        <span>منجزة</span>
                     </div>
-                    <div class="stat-box">
-                        <h4 id="totalMissedMonth" style="color: #999">0</h4>
-                        <span>فائتة/متبقية</span>
+                    <div class="stat-item">
+                        <h4 id="statMissed" style="color: #ccc">0</h4>
+                        <span>متبقية</span>
                     </div>
                 </div>
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">إحصائيات شهر <span id="currentMonthName"></span></p>
+                <p style="margin-top: 15px; font-size: 0.8rem; color: #999;">أداؤك خلال الشهر الحالي</p>
             </div>
         </div>
 
     </div>
 
-    <div class="nav-bar">
-        <button class="nav-link active" onclick="switchView('today')" id="btnToday">
-            <span class="nav-icon">📝</span> اليوم
+    <div class="navbar">
+        <button class="nav-btn active" onclick="switchTab('today')" id="navToday">
+            <span class="nav-icon">✅</span> اليوم
         </button>
-        <button class="nav-link" onclick="switchView('plan')" id="btnPlan">
+        <button class="nav-btn" onclick="switchTab('plan')" id="navPlan">
             <span class="nav-icon">📅</span> الجدول
         </button>
-        <button class="nav-link" onclick="switchView('stats')" id="btnStats">
-            <span class="nav-icon">📊</span> إحصائيات
+        <button class="nav-btn" onclick="switchTab('stats')" id="navStats">
+            <span class="nav-icon">📈</span> إحصائيات
         </button>
     </div>
 
     <script>
-        // --- 1. قاعدة بيانات ضخمة للصور والاقتباسات (غير متكررة) ---
-        const inspirationData = [
-            // إيلون ماسك - الفضاء والصواريخ
-            { img: "https://upload.wikimedia.org/wikipedia/commons/9/92/SpaceX_Starship_SN8_launch_pad.jpg", quote: "عندما يكون شيء ما مهماً بما فيه الكفاية، فإنك تفعله حتى لو كانت الاحتمالات ضدك.", author: "إيلون ماسك" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/d/de/Falcon_Heavy_Demo_Mission_%2839337245145%29.jpg", quote: "الخطوة الأولى هي إثبات أن الشيء ممكن؛ ثم الاحتمال سيحدث.", author: "إيلون ماسك" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/SpaceX_Starlink_Mission_%2847926144523%29.jpg/1280px-SpaceX_Starlink_Mission_%2847926144523%29.jpg", quote: "المثابرة مهمة جداً. لا ينبغي أن تستسلم إلا إذا أجبرت على ذلك.", author: "إيلون ماسك" },
-            { img: "https://live.staticflickr.com/65535/49937378092_e3578c2c24_b.jpg", quote: "الفشل خيار هنا. إذا لم تفشل الأشياء، فأنت لا تبتكر بما فيه الكفاية.", author: "إيلون ماسك" },
-            // جيف بيزوز - أمازون واللوجستيات
-            { img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Amazon_Spheres_January_2019.jpg", quote: "إذا ضاعفت عدد التجارب التي تقوم بها سنوياً، فستضاعف إبداعك.", author: "جيف بيزوز" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Blue_Origin_New_Shepard_Launch_NS-10.jpg", quote: "الذكاء هو نعمة، أما اللطف فهو خيار.", author: "جيف بيزوز" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Amazon_Full_Moon.jpg/1280px-Amazon_Full_Moon.jpg", quote: "اعمل بجد، استمتع بوقتك، واصنع التاريخ.", author: "جيف بيزوز" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Amazon_Books_NYC.jpg/1280px-Amazon_Books_NYC.jpg", quote: "في النهاية، نحن خياراتنا. اصنع لنفسك قصة عظيمة.", author: "جيف بيزوز" },
-            // تيسلا والمزيد
-            { img: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Tesla_Roadster_2.0_in_Switzerland_-_Front.jpg", quote: "أعتقد أنه من الممكن للناس العاديين أن يختاروا أن يكونوا استثنائيين.", author: "إيلون ماسك" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Tesla_Gigafactory_1_-_December_2019.jpg/1280px-Tesla_Gigafactory_1_-_December_2019.jpg", quote: "يجب أن تكون لديك أسباب تجعلك تنهض في الصباح وترغب في العيش.", author: "إيلون ماسك" },
-             // المزيد من الاقتباسات القوية لضمان عدم التكرار
-            { img: "https://upload.wikimedia.org/wikipedia/commons/9/92/SpaceX_Starship_SN8_launch_pad.jpg", quote: "الخطر الأكبر هو عدم المخاطرة.", author: "مارك زوكربيرج" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/d/de/Falcon_Heavy_Demo_Mission_%2839337245145%29.jpg", quote: "لا يهمني أن أكون أغنى رجل في المقبرة. الذهاب للنوم ليلاً ونحن نقول أننا فعلنا شيئاً رائعاً.. هذا ما يهمني.", author: "ستيف جوبز" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/b/b6/Amazon_Spheres_January_2019.jpg", quote: "إذا كنت لا تستطيع التسامح مع النقد، فلا تفعل أي شيء جديد أو مثير للاهتمام.", author: "جيف بيزوز" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Tesla_Roadster_2.0_in_Switzerland_-_Front.jpg", quote: "الناس يعملون بشكل أفضل عندما يعرفون ما هو الهدف ولماذا.", author: "إيلون ماسك" },
-            { img: "https://upload.wikimedia.org/wikipedia/commons/a/a7/Blue_Origin_New_Shepard_Launch_NS-10.jpg", quote: "أحد الأشياء الوحيدة التي يمكن التحكم بها في الحياة هو جهدك.", author: "مارك كوبان" }
-             // يمكن إضافة العشرات هنا.. النظام سيدور بينهم يومياً
+        // --- 1. البيانات (صور وروابط موثوقة) ---
+        // استخدمنا روابط Unsplash لأنها أسرع وأقل عرضة للحجب
+        const contentData = [
+            {
+                // إيلون ماسك
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/800px-Elon_Musk_Royal_Society_%28crop2%29.jpg",
+                quote: "عندما يكون شيء ما مهماً بما فيه الكفاية، فإنك تفعله حتى لو كانت الاحتمالات ضدك.",
+                author: "إيلون ماسك"
+            },
+            {
+                // صاروخ (رمز للإنجاز)
+                img: "https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=1000&auto=format&fit=crop",
+                quote: "الخطوة الأولى هي إثبات أن الشيء ممكن.",
+                author: "إيلون ماسك"
+            },
+            {
+                // جيف بيزوز
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/800px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg",
+                quote: "إذا ضاعفت عدد التجارب التي تقوم بها سنوياً، فستضاعف إبداعك.",
+                author: "جيف بيزوز"
+            },
+            {
+                // سيارة تيسلا (رمز للابتكار)
+                img: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=1000&auto=format&fit=crop",
+                quote: "أعتقد أنه من الممكن للناس العاديين أن يختاروا أن يكونوا استثنائيين.",
+                author: "إيلون ماسك"
+            },
+            {
+                // كتب (رمز للمعرفة - بيزوز)
+                img: "https://images.unsplash.com/photo-1495446815901-a7297e633e8d?q=80&w=1000&auto=format&fit=crop",
+                quote: "اعمل بجد، استمتع بوقتك، واصنع التاريخ.",
+                author: "جيف بيزوز"
+            }
         ];
 
-        // --- 2. إعدادات النظام ---
         const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const daysAr = {'Sunday': 'الأحد', 'Monday': 'الإثنين', 'Tuesday': 'الثلاثاء', 'Wednesday': 'الأربعاء', 'Thursday': 'الخميس', 'Friday': 'الجمعة', 'Saturday': 'السبت'};
-        const monthsAr = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
 
-        let routine = JSON.parse(localStorage.getItem('routine_v8')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_v8')) || {};
+        let routine = JSON.parse(localStorage.getItem('routine_v9')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_v9')) || {};
         let currentPlanDay = '';
-        let monthlyChart = null;
+        let chartInstance = null;
 
+        // --- 2. التشغيل ---
         window.onload = function() {
-            setDailyInspiration(); // تعيين صورة واقتباس اليوم
+            loadDailyContent();
             
             const now = new Date();
             const dayName = daysEn[now.getDay()];
-            document.getElementById('headerDate').innerText = `${daysAr[dayName]} | ${now.toLocaleDateString('ar-SA')}`;
+            document.getElementById('dateBar').innerText = `${daysAr[dayName]} | ${now.toLocaleDateString('ar-SA')}`;
             currentPlanDay = dayName;
 
-            renderDayScroller();
+            renderScroller();
             renderRoutine();
             renderToday();
-            initChart(); // تهيئة الرسم البياني
-            calculateMonthlyStats(); // حساب الإحصائيات
+            initChart();
+            updateStats();
         };
 
-        // --- 3. منطق الإلهام اليومي (غير متكرر) ---
-        function setDailyInspiration() {
-            const today = new Date();
-            // حساب رقم اليوم في السنة (1-366)
-            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-            // استخدام باقي القسمة لتدوير الاقتباسات
-            const index = dayOfYear % inspirationData.length;
-            const data = inspirationData[index];
+        function loadDailyContent() {
+            // اختيار محتوى بناءً على اليوم لضمان عدم التكرار العشوائي
+            const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+            const index = dayOfYear % contentData.length;
+            const data = contentData[index];
 
-            document.getElementById('dailySketchBtn').src = data.img;
-            document.getElementById('dailyQuote').innerText = `"${data.quote}"`;
-            document.getElementById('dailyAuthor').innerText = `- ${data.author}`;
+            document.getElementById('headerImage').src = data.img;
+            document.getElementById('headerQuote').innerText = `"${data.quote}"`;
+            document.getElementById('headerAuthor').innerText = `- ${data.author}`;
         }
 
-        // --- 4. إدارة المهام اليومية ---
+        // --- 3. إدارة المهام ---
         function renderToday() {
             const now = new Date();
             const dayName = daysEn[now.getDay()];
             const dateKey = now.toLocaleDateString('en-CA');
-            const list = document.getElementById('tasksContainer');
+            const list = document.getElementById('tasksList');
             const tasks = routine[dayName] || [];
+
             list.innerHTML = '';
-            document.getElementById('emptyState').style.display = tasks.length === 0 ? 'block' : 'none';
+            document.getElementById('emptyToday').style.display = tasks.length === 0 ? 'block' : 'none';
+
             tasks.sort((a, b) => (a.time || '23:59').localeCompare(b.time || '23:59'));
-            
+
             tasks.forEach(task => {
                 const uid = `${dateKey}_${task.name}_${task.time}`;
                 const isDone = history[uid] === true;
+                
                 const div = document.createElement('div');
                 div.className = `task-card ${isDone ? 'done' : ''}`;
-                div.innerHTML = `<div class="task-info"><h3>${task.name}</h3>${task.time ? `<span class="task-time">⏰ ${formatTime(task.time)}</span>` : ''}</div><button class="check-btn" onclick="toggleTask('${uid}')">✔</button>`;
+                div.innerHTML = `
+                    <div class="task-info">
+                        <h3>${task.name}</h3>
+                        ${task.time ? `<span class="task-time">⏰ ${tConvert(task.time)}</span>` : ''}
+                    </div>
+                    <button class="check-btn" onclick="toggleTask('${uid}')">✔</button>
+                `;
                 list.appendChild(div);
             });
         }
 
         function toggleTask(id) {
             history[id] = !history[id];
-            localStorage.setItem('history_v8', JSON.stringify(history));
+            localStorage.setItem('history_v9', JSON.stringify(history));
             renderToday();
-            calculateMonthlyStats(); // تحديث الإحصائيات عند كل تغيير
+            updateStats();
         }
 
-        // --- 5. إدارة الجدول ---
-        function renderDayScroller() {
-            const box = document.getElementById('dayScroller'); box.innerHTML = '';
+        // --- 4. إدارة الجدول ---
+        function renderScroller() {
+            const container = document.getElementById('dayScroller');
+            container.innerHTML = '';
             const todayIdx = new Date().getDay();
             const sorted = [...daysEn.slice(todayIdx), ...daysEn.slice(0, todayIdx)];
+
             sorted.forEach(day => {
                 const chip = document.createElement('div');
                 chip.className = `day-chip ${day === currentPlanDay ? 'active' : ''}`;
                 chip.innerText = daysAr[day];
-                chip.onclick = () => { currentPlanDay = day; renderDayScroller(); renderRoutine(); };
-                box.appendChild(chip);
+                chip.onclick = () => { currentPlanDay = day; renderScroller(); renderRoutine(); };
+                container.appendChild(chip);
             });
         }
+
         function renderRoutine() {
-            document.getElementById('selectedDayLabel').innerText = daysAr[currentPlanDay];
-            const list = document.getElementById('routineContainer');
+            document.getElementById('selectedDayName').innerText = daysAr[currentPlanDay];
+            const list = document.getElementById('routineList');
             const tasks = routine[currentPlanDay] || [];
             list.innerHTML = '';
-            if(tasks.length === 0) list.innerHTML = '<div style="color:#ccc; font-size:0.8rem; padding:10px;">فارغ</div>';
+            
+            if (tasks.length === 0) list.innerHTML = '<div style="color:#ccc; text-align:center; padding:10px;">لا توجد مهام</div>';
+
             tasks.forEach((task, idx) => {
-                const div = document.createElement('div'); div.className = 'routine-item';
-                div.innerHTML = `<div><strong>${task.name}</strong> <small style="color:#aaa;">${formatTime(task.time)}</small></div><span class="btn-del" onclick="delTask(${idx})">حذف</span>`;
+                const div = document.createElement('div');
+                div.className = 'routine-row';
+                div.innerHTML = `
+                    <div><strong>${task.name}</strong> <small style="color:#aaa">${tConvert(task.time)}</small></div>
+                    <span class="btn-del" onclick="delTask(${idx})">حذف</span>
+                `;
                 list.appendChild(div);
             });
         }
+
         function addTask() {
-            const name = document.getElementById('taskName').value.trim();
-            const time = document.getElementById('taskTime').value;
+            const name = document.getElementById('taskInput').value.trim();
+            const time = document.getElementById('timeInput').value;
             if(!name) return;
+
             routine[currentPlanDay].push({name, time});
-            localStorage.setItem('routine_v8', JSON.stringify(routine));
-            document.getElementById('taskName').value = ''; document.getElementById('taskTime').value = '';
-            renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); calculateMonthlyStats(); }
+            localStorage.setItem('routine_v9', JSON.stringify(routine));
+            document.getElementById('taskInput').value = '';
+            document.getElementById('timeInput').value = '';
+            
+            renderRoutine();
+            if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
         }
+
         function delTask(idx) {
             if(confirm('حذف؟')) {
                 routine[currentPlanDay].splice(idx, 1);
-                localStorage.setItem('routine_v8', JSON.stringify(routine));
-                renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); calculateMonthlyStats(); }
+                localStorage.setItem('routine_v9', JSON.stringify(routine));
+                renderRoutine();
+                if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
             }
         }
 
-        // --- 6. الإحصائيات الشهرية (جديد) ---
+        // --- 5. الإحصائيات ---
         function initChart() {
-            const ctx = document.getElementById('monthlyChart').getContext('2d');
-            monthlyChart = new Chart(ctx, {
+            const ctx = document.getElementById('myChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['مكتمل', 'فائت/متبقي'],
+                    labels: ['منجزة', 'متبقية'],
                     datasets: [{
                         data: [0, 1],
-                        backgroundColor: ['#27ae60', '#e0e0e0'],
+                        backgroundColor: ['#27ae60', '#eee'],
                         borderWidth: 0
                     }]
                 },
-                options: {
-                    responsive: true,
-                    cutout: '75%',
-                    plugins: { legend: { position: 'bottom' } }
-                }
+                options: { cutout: '70%', responsive: true, plugins: { legend: { display: false } } }
             });
         }
 
-        function calculateMonthlyStats() {
+        function updateStats() {
+            // حساب بسيط للشهر الحالي
             const now = new Date();
-            const currentMonth = now.getMonth(); // 0-indexed
-            const currentYear = now.getFullYear();
-            document.getElementById('currentMonthName').innerText = monthsAr[currentMonth];
-
-            let completedCount = 0;
-            let totalScheduledCount = 0;
-
-            // 1. حساب المهام المكتملة في هذا الشهر من السجل
-            for (let key in history) {
-                if (history[key] === true) {
-                    const datePart = key.split('_')[0]; // YYYY-MM-DD
-                    const [year, month, day] = datePart.split('-').map(Number);
-                    if (year === currentYear && month - 1 === currentMonth) {
-                        completedCount++;
-                    }
+            const currentMonth = now.getMonth();
+            let done = 0;
+            
+            // حساب المنجز
+            for(let key in history) {
+                if(history[key]) {
+                    const datePart = key.split('_')[0];
+                    const [y, m, d] = datePart.split('-').map(Number);
+                    if(m - 1 === currentMonth) done++;
                 }
             }
+            
+            // تقدير إجمالي (للعرض فقط - يمكن تحسينه ليكون أكثر دقة)
+            // سنفترض أن الهدف هو إنجاز المهام الموجودة حالياً لليوم
+            const dayName = daysEn[now.getDay()];
+            const todayTotal = (routine[dayName] || []).length;
+            const todayDone = document.querySelectorAll('.task-card.done').length;
+            const missed = Math.max(0, todayTotal - todayDone); // عرض المتبقي لليوم
 
-            // 2. حساب إجمالي المهام المجدولة للأيام الماضية من الشهر وحتى اليوم
-            for (let d = 1; d <= now.getDate(); d++) {
-                const tempDate = new Date(currentYear, currentMonth, d);
-                const dayName = daysEn[tempDate.getDay()];
-                totalScheduledCount += (routine[dayName] || []).length;
-            }
+            document.getElementById('statDone').innerText = done; // إجمالي الشهر
+            document.getElementById('statMissed').innerText = missed; // متبقي اليوم
 
-            // 3. تحديث الواجهة
-            const missedCount = Math.max(0, totalScheduledCount - completedCount);
-            document.getElementById('totalDoneMonth').innerText = completedCount;
-            document.getElementById('totalMissedMonth').innerText = missedCount;
-
-            // 4. تحديث الرسم البياني
-            if (monthlyChart) {
-                if (totalScheduledCount === 0) {
-                    monthlyChart.data.datasets[0].data = [0, 1]; // تجنب القسمة على صفر
-                    monthlyChart.data.datasets[0].backgroundColor = ['#27ae60', '#eee'];
+            // تحديث الشارت بناءً على اليوم
+            if(chartInstance) {
+                if(todayTotal === 0) {
+                    chartInstance.data.datasets[0].data = [0, 1];
                 } else {
-                    monthlyChart.data.datasets[0].data = [completedCount, missedCount];
+                    chartInstance.data.datasets[0].data = [todayDone, missed];
                 }
-                monthlyChart.update();
+                chartInstance.update();
             }
         }
 
-        // --- أدوات مساعدة ---
-        function formatTime(t) { if(!t) return ''; let [h, m] = t.split(':'); let ampm = h >= 12 ? 'م' : 'ص'; h = h % 12 || 12; return `${h}:${m} ${ampm}`; }
-        function switchView(v) {
+        // --- أدوات ---
+        function tConvert (time) {
+            if(!time) return '';
+            time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+            if (time.length > 1) { 
+                time = time.slice (1);  
+                time[5] = +time[0] < 12 ? ' ص' : ' م'; 
+                time[0] = +time[0] % 12 || 12; 
+            }
+            return time.join (''); 
+        }
+
+        function switchTab(tab) {
             document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(e => e.classList.remove('active'));
-            document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1)).classList.add('active');
-            document.getElementById('btn' + v.charAt(0).toUpperCase() + v.slice(1)).classList.add('active');
-            if(v === 'today') renderToday();
-            if(v === 'stats') calculateMonthlyStats();
+            document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
+            
+            if(tab === 'today') {
+                document.getElementById('viewToday').classList.add('active');
+                document.getElementById('navToday').classList.add('active');
+                renderToday();
+            } else if(tab === 'plan') {
+                document.getElementById('viewPlan').classList.add('active');
+                document.getElementById('navPlan').classList.add('active');
+            } else {
+                document.getElementById('viewStats').classList.add('active');
+                document.getElementById('navStats').classList.add('active');
+                updateStats();
+            }
         }
     </script>
 </body>
 </html>
-
