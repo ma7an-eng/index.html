@@ -15,7 +15,7 @@
     
     <title>Routinz</title>
     
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%3Fv%3D12%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
+    <link rel="manifest" href="manifest.json">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -31,6 +31,8 @@
             --accent-glow: rgba(255, 107, 0, 0.9); 
             --accent-glow-light: rgba(255, 107, 0, 0.4);
             --success: #10b981; 
+            --success-bg: rgba(16, 185, 129, 0.15); 
+            --border-color: #1a1a1a; 
             --danger: #ef4444;
         }
         
@@ -93,6 +95,13 @@
         .stats-box { background: var(--bg-card); padding: 35px 25px; border-radius: 25px; text-align: center; margin-top: 15px; border: 1px solid #222; }
         .chart-container { position: relative; height: 240px; width: 100%; display: flex; justify-content: center; margin-bottom: 35px; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.2)); }
 
+        /* نافذة التثبيت للاندرويد والايفون */
+        .install-popup { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); width: 90%; max-width: 450px; background: rgba(0, 0, 0, 0.95); padding: 25px; border-radius: 25px; z-index: 3000; text-align: center; transition: all 0.5s ease; border: 2px solid var(--accent); color: var(--text-primary); backdrop-filter: blur(20px); box-shadow: 0 0 40px var(--accent-glow), inset 0 0 20px var(--accent-glow-light); display: none; opacity: 0; }
+        .install-popup.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        
+        .btn-act { font-family: inherit; padding: 16px 30px; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 1.2rem; width: 100%; color: #000; background: var(--accent); transition: all 0.3s ease; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); animation: neonPulse 2s infinite; display: none; margin-top: 15px; }
+        .btn-act:active { transform: scale(0.95); }
+
         .day-scroller { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px 20px; margin-bottom: 25px; scrollbar-width: none; direction: ltr; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
         .day-scroller::-webkit-scrollbar { display: none; }
         .day-chip { font-family: 'Montserrat', sans-serif; padding: 14px 26px; background: var(--bg-card); border: 1px solid #222; border-radius: 35px; cursor: pointer; font-weight: 700; white-space: nowrap; color: var(--text-secondary); transition: all 0.3s ease; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; }
@@ -115,29 +124,14 @@
         .nav-icon { font-size: 1.7rem; margin-bottom: 6px; transition: transform 0.3s ease; display: block; filter: grayscale(100%); }
         .nav-btn.active .nav-icon { transform: translateY(-2px); filter: grayscale(0%) drop-shadow(0 0 10px var(--accent)); }
 
-        /* --- كود التحميل المطابق تماماً لطلبك الأول (V17) --- */
-        .install-popup { 
-            position: fixed; bottom: 0; left: 0; width: 100%; 
-            background: rgba(0, 0, 0, 0.95); padding: 25px 20px; 
-            border-top-left-radius: 25px; border-top-right-radius: 25px; 
-            box-shadow: 0 0 40px var(--accent-glow); z-index: 3000; 
-            display: none; /* كودك الأول كان display none صريح */
-            text-align: center; animation: slideUp 0.5s ease; 
-            border-top: 2px solid var(--accent); color: var(--text-primary); 
-            backdrop-filter: blur(20px); 
-        }
-        @keyframes slideUp { from {transform: translateY(100%);} to {transform: translateY(0);} }
-        .ios-arrow { animation: bounceArrow 1.5s infinite; font-size: 2.2rem; margin-top: 15px; display: block; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow)); }
-        @keyframes bounceArrow { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(10px);} }
-        .btn-act { font-family: inherit; padding: 16px 30px; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 1.2rem; width: 100%; color: #000; background: var(--accent); transition: all 0.3s ease; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); animation: neonPulse 2s infinite; }
-        .btn-act:active { transform: scale(0.95); }
-
+        .section-title { font-family: inherit; margin: 15px 0 30px; font-size: 1.7rem; font-weight: 900; color: var(--text-primary); display: flex; align-items: center; gap: 12px; }
+        .section-title::before { content: ''; display: inline-block; width: 8px; height: 25px; border-radius: 4px; background: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="icon.jpg?v=12" class="splash-logo" alt="Routinz">
+        <img src="icon.jpg?v=12" class="splash-logo" alt="Routinz Logo">
     </div>
 
     <div class="lang-modal-overlay" id="langModal">
@@ -156,16 +150,16 @@
             <span onclick="closeInstallPrompt()" style="font-size:2rem; cursor:pointer; color:#888;">&times;</span>
         </div>
         
-        <p id="txt-install-desc" style="color:var(--text-primary); font-size:1.1rem; margin-bottom:25px; font-weight: 600; line-height: 1.6;">
+        <p id="txt-install-desc" style="color:var(--text-primary); font-size:1.1rem; margin-bottom:20px; font-weight: 600; line-height: 1.6; display:none;">
             أضف التطبيق للشاشة الرئيسية لتجربة أسرع وبدون إنترنت.
         </p>
 
         <div id="ios-instruction" style="display:none; background:#111; padding:20px; border-radius:16px; border:1px dashed var(--accent); color: var(--text-primary); font-size: 1.1rem;">
             <span id="txt-ios-share">اضغط على زر المشاركة</span> <span style="font-size:1.6rem; color:var(--accent);">⎋</span> <br> <span id="txt-ios-add" style="color:var(--accent); text-shadow: 0 0 10px var(--accent-glow); font-weight: 800;">إضافة إلى الصفحة الرئيسية</span>
-            <span class="ios-arrow">⬇</span>
+            <span style="font-size: 2.2rem; margin-top: 15px; display: block; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow));">⬇</span>
         </div>
 
-        <button id="android-install-btn" class="btn-act" style="display:none; margin-top: 15px;"><span id="txt-install-btn">تثبيت الآن</span></button>
+        <button id="android-install-btn" class="btn-act"><span id="txt-install-btn">تثبيت الآن</span></button>
     </div>
 
     <div class="app-container">
@@ -243,6 +237,16 @@
     </div>
 
     <script>
+        // --- تسجيل ملف Service Worker الرسمي لضمان ظهور زر التثبيت للأندرويد ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('SW Registered'))
+                    .catch(err => console.log('SW Failed', err));
+            });
+        }
+
+        // --- نظام اللغات ---
         const dict = {
             ar: {
                 dir: "rtl", font: "'Cairo', sans-serif",
@@ -325,61 +329,69 @@
         }
 
         function setLanguage(langCode) { currentLang = langCode; localStorage.setItem('routinz_lang', langCode); applyLanguage(); closeLangModal(); }
-        function openLangModal() { const m = document.getElementById('langModal'), c = document.getElementById('langModalContent'); m.style.display = 'flex'; setTimeout(() => { m.style.opacity = '1'; c.classList.add('show'); }, 10); }
-        function closeLangModal() { const m = document.getElementById('langModal'), c = document.getElementById('langModalContent'); m.style.opacity = '0'; c.classList.remove('show'); setTimeout(() => { m.style.display = 'none'; }, 300); }
+        function openLangModal() { document.getElementById('langModal').classList.add('show'); }
+        function closeLangModal() { document.getElementById('langModal').classList.remove('show'); }
 
-        // ==========================================
-        // كود التثبيت الأصلي (نسخ لصق من الكود الأول)
-        // ==========================================
+        // --- نظام التثبيت للأندرويد والآيفون ---
         let deferredPrompt;
-        
-        function checkInstall() {
-            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-            
-            if (!isInStandaloneMode && !window.matchMedia('(display-mode: standalone)').matches) {
-                const prompt = document.getElementById('install-prompt');
-                
-                if (isIos) {
-                    document.getElementById('ios-instruction').style.display = 'block';
-                    document.getElementById('txt-install-desc').style.display = 'none';
-                    document.getElementById('android-install-btn').style.display = 'none';
-                    setTimeout(() => { prompt.style.display = 'block'; }, 3000); 
-                }
-            }
-        }
 
+        // التقاط حدث التثبيت للاندرويد
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const prompt = document.getElementById('install-prompt');
-            const btn = document.getElementById('android-install-btn');
+            const promptEl = document.getElementById('install-prompt');
             
-            document.getElementById('ios-instruction').style.display = 'none';
+            // إظهار زر ونص الأندرويد وإخفاء نص الآيفون
             document.getElementById('txt-install-desc').style.display = 'block';
-            btn.style.display = 'block';
-            prompt.style.display = 'block'; // تفعيل الظهور المباشر (مثل الكود الأول)
+            document.getElementById('android-install-btn').style.display = 'block';
+            document.getElementById('ios-instruction').style.display = 'none';
 
-            btn.addEventListener('click', () => {
-                prompt.style.display = 'none';
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                });
-            });
+            promptEl.style.display = 'block';
+            setTimeout(() => { promptEl.classList.add('show'); }, 100);
         });
 
-        function closeInstallPrompt() {
-            document.getElementById('install-prompt').style.display = 'none';
+        // تشغيل التحميل عند ضغط الزر
+        document.getElementById('android-install-btn').addEventListener('click', async () => {
+            document.getElementById('install-prompt').classList.remove('show');
+            setTimeout(() => { document.getElementById('install-prompt').style.display = 'none'; }, 400);
+            
+            if(deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+        });
+
+        // فحص الآيفون (iOS)
+        function checkIosInstall() {
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+            if (isIos && !isInStandaloneMode) {
+                const promptEl = document.getElementById('install-prompt');
+                
+                // إظهار نص الآيفون وإخفاء الباقي
+                document.getElementById('txt-install-desc').style.display = 'none';
+                document.getElementById('android-install-btn').style.display = 'none';
+                document.getElementById('ios-instruction').style.display = 'block';
+                
+                promptEl.style.display = 'block';
+                setTimeout(() => { promptEl.classList.add('show'); }, 100);
+            }
         }
-        // ==========================================
+
+        function closeInstallPrompt() { 
+            const promptEl = document.getElementById('install-prompt');
+            promptEl.classList.remove('show'); 
+            setTimeout(() => { promptEl.style.display = 'none'; }, 400);
+        }
 
         const quotes = [ "\"Discipline equals freedom.\"", "\"We are what we repeatedly do.\"", "\"The future depends on what you do today.\"", "\"Don't stop when you're tired. Stop when you're done.\"", "\"Success is the sum of small efforts.\"" ];
         const successAudio = new Audio('https://www.myinstants.com/media/sounds/discord-notification.mp3');
         successAudio.volume = 0.5; successAudio.preload = 'auto'; 
 
-        let routine = JSON.parse(localStorage.getItem('routinz_v40')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_routinz_v40')) || {};
+        let routine = JSON.parse(localStorage.getItem('routinz_v39')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_routinz_v39')) || {};
         let currentPlanDay = '';
         let chartInstance = null;
 
@@ -389,8 +401,7 @@
                 splash.style.opacity = '0';
                 setTimeout(() => { 
                     splash.style.visibility = 'hidden'; 
-                    // استدعاء دالة التثبيت بعد اختفاء السبلاش (كما في الكود الأول)
-                    checkInstall(); 
+                    checkIosInstall(); // استدعاء فحص الآيفون بعد اختفاء شاشة البداية
                 }, 600);
             }, 2500);
 
@@ -404,7 +415,7 @@
                 onEnd: function (evt) {
                     const item = routine[currentPlanDay].splice(evt.oldIndex, 1)[0];
                     routine[currentPlanDay].splice(evt.newIndex, 0, item);
-                    localStorage.setItem('routinz_v40', JSON.stringify(routine));
+                    localStorage.setItem('routinz_v39', JSON.stringify(routine));
                     if(currentPlanDay === daysInternal[new Date().getDay()]) renderToday();
                 }
             });
@@ -414,7 +425,7 @@
 
         function playProfessionalDing() { try { if (navigator.vibrate) navigator.vibrate(30); successAudio.currentTime = 0; successAudio.play(); } catch(e) {} }
 
-        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v40')) || { count: 0, last100Date: null };
+        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v39')) || { count: 0, last100Date: null };
         function updateStreakDisplay() { document.getElementById('streakCount').innerText = streakData.count; }
         
         function checkDailyStreak(todayTotal, todayDone) {
@@ -424,13 +435,13 @@
                     let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                     streakData.count = (streakData.last100Date === yesterday.toLocaleDateString('en-CA')) ? streakData.count + 1 : 1;
                     streakData.last100Date = todayStr;
-                    localStorage.setItem('streak_routinz_v40', JSON.stringify(streakData)); updateStreakDisplay();
+                    localStorage.setItem('streak_routinz_v39', JSON.stringify(streakData)); updateStreakDisplay();
                 }
             } else if (streakData.last100Date === todayStr && todayDone < todayTotal) {
                 let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                 streakData.last100Date = yesterday.toLocaleDateString('en-CA');
                 streakData.count = Math.max(0, streakData.count - 1);
-                localStorage.setItem('streak_routinz_v40', JSON.stringify(streakData)); updateStreakDisplay();
+                localStorage.setItem('streak_routinz_v39', JSON.stringify(streakData)); updateStreakDisplay();
             }
         }
 
@@ -464,7 +475,7 @@
             });
         }
         
-        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v40', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
+        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v39', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
         
         function initChart() {
             const ctx = document.getElementById('myChart');
@@ -510,12 +521,12 @@
             const name = document.getElementById('taskInput').value, time = document.getElementById('timeInput').value, tag = document.getElementById('taskTag').value;
             if(!name) return;
             if(!routine[currentPlanDay]) routine[currentPlanDay] = [];
-            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v40', JSON.stringify(routine));
+            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v39', JSON.stringify(routine));
             document.getElementById('taskInput').value = ''; document.getElementById('timeInput').value = '';
             renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); }
         }
 
-        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v40', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
+        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v39', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
 
         function tConvert(time) {
             if(!time) return dict[currentLang].allDay; 
