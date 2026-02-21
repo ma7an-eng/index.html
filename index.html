@@ -5,308 +5,418 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#0f172a">
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="روتين العظماء">
+    <meta name="apple-mobile-web-app-title" content="Routinz">
     
     <link rel="apple-touch-icon" href="icon.jpg">
     <link rel="icon" type="image/jpg" href="icon.jpg">
     
-    <link rel="manifest" href='data:application/manifest+json;base64,ewogICJuYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzaG9ydF9uYW1lIjogItix2YjYqtmK2YYg2KfZhNi52LjZhdin2KEiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhMWExYSIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTFhMWEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJpY29uLmpwZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvanBnIgogICAgfQogIF0KfQ=='>
-
-    <title>روتين العظماء - V17</title>
+    <title>روتينز - Routinz</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Great+Vibes&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     
     <style>
-        .notranslate { transform: translate(0); }
-        :root { --bg-main: #f4f6f8; --bg-card: #ffffff; --text-primary: #1a1a1a; --accent-black: #000000; --gold: #c5a028; --success: #27ae60; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; padding-bottom: 90px; overscroll-behavior-y: none; user-select: none; }
-
-        /* شاشة الترحيب */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #1a1a1a; z-index: 9999;
-            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-out;
+        :root { 
+            --bg-main: #0f172a; var(--bg-card): #1e293b; 
+            --text-primary: #f1f5f9; --text-secondary: #94a3b8; 
+            --accent: #f59e0b; --accent-glow: rgba(245, 158, 11, 0.6); 
+            --success: #10b981; --success-bg: rgba(16, 185, 129, 0.15); 
+            --border-color: #334155; --danger: #ef4444;
+            --bg-card: #1e293b;
         }
-        .splash-logo { width: 150px; height: 150px; object-fit: cover; border-radius: 25px; box-shadow: 0 0 30px rgba(255,255,255,0.1); animation: pulse 2s infinite; }
-        .splash-text { color: #fff; margin-top: 20px; font-weight: 900; font-size: 1.5rem; letter-spacing: 1px; opacity: 0; animation: fadeInUp 1s ease-out forwards 0.5s; }
         
-        .app-container { width: 100%; max-width: 600px; background: var(--bg-card); min-height: 100vh; box-shadow: 0 0 25px rgba(0,0,0,0.08); position: relative; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background-color: var(--bg-main); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; padding-bottom: 90px; overscroll-behavior-y: none; user-select: none; }
 
-        /* الهيدر */
-        .sketch-header { position: relative; height: 260px; background: #222; overflow: hidden; border-bottom: 4px solid var(--accent-black); }
-        .sketch-img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) contrast(110%); opacity: 0.9; }
-        .header-content { position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, #000, transparent); padding: 20px; color: #fff; text-align: center; }
-        .avatars-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
-        .mini-avatar { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff; object-fit: cover; filter: grayscale(100%); background: #fff; }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px var(--accent-glow); } 50% { box-shadow: 0 0 25px var(--accent), 0 0 10px var(--accent); } 100% { box-shadow: 0 0 10px var(--accent-glow); } }
+        @keyframes textGlow { 0% { text-shadow: 0 0 5px var(--accent-glow); } 50% { text-shadow: 0 0 20px var(--accent), 0 0 10px var(--accent); } 100% { text-shadow: 0 0 5px var(--accent-glow); } }
+        @keyframes successPulse { 0% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); } 50% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.8); } 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); } }
+        @keyframes datePulse { 0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3), inset 0 0 10px rgba(245, 158, 11, 0.1); } 50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.7), inset 0 0 15px rgba(245, 158, 11, 0.4); border-color: rgba(245, 158, 11, 0.8); } 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3), inset 0 0 10px rgba(245, 158, 11, 0.1); } }
 
-        /* الأقسام */
-        .view-section { display: none; padding: 20px; animation: fadeIn 0.4s; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1000&auto=format&fit=crop'); background-size: cover; background-position: center; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-out; }
+        .splash-text { font-family: 'Cairo', sans-serif; color: #fff; margin-top: 20px; font-weight: 900; font-size: 2.2rem; letter-spacing: 2px; opacity: 0; animation: fadeInUp 1s ease-out forwards 0.3s; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .splash-subtitle { font-family: 'Montserrat', sans-serif; color: var(--accent); font-size: 1rem; font-weight: 700; opacity: 0; animation: fadeInUp 1s ease-out forwards 0.5s; letter-spacing: 4px; margin-top: 5px; }
+
+        .app-container { width: 100%; max-width: 600px; background: var(--bg-main); min-height: 100vh; position: relative; }
+
+        .hero-header { position: relative; height: 300px; background: linear-gradient(to top, var(--bg-main), rgba(15, 23, 42, 0.4)), url('https://images.unsplash.com/photo-1517976487492-5750f3195933?q=80&w=1000&auto=format&fit=crop'); background-size: cover; background-position: center 60%; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; color: white; padding-bottom: 30px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4); }
+        .hero-header::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(270deg, #f59e0b, #ea580c, #f43f5e, #f59e0b); background-size: 300% 300%; animation: gradientMove 3s ease infinite; }
+
+        .streak-counter { position: absolute; top: 20px; left: 20px; background: rgba(15, 23, 42, 0.7); padding: 5px 15px; border-radius: 20px; border: 1px solid var(--accent); display: flex; align-items: center; gap: 8px; font-family: 'Montserrat', sans-serif; font-weight: 800; color: #fff; box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); backdrop-filter: blur(5px); direction: ltr; }
+        .streak-fire { font-size: 1.2rem; filter: drop-shadow(0 0 5px var(--accent)); animation: textGlow 2s infinite; }
+
+        .hero-header h1 { font-family: 'Cairo', sans-serif; font-size: 2.2rem; font-weight: 900; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .hero-header .subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--accent); letter-spacing: 3px; margin-bottom: 12px; }
+        
+        #headerDate { font-family: 'Montserrat', sans-serif; font-size: 1.1rem; font-weight: 800; letter-spacing: 2px; color: #fff; text-transform: uppercase; background: rgba(15, 23, 42, 0.6); padding: 8px 24px; border-radius: 30px; border: 1px solid rgba(245, 158, 11, 0.4); backdrop-filter: blur(8px); animation: datePulse 3s infinite, textGlow 3s infinite; direction: ltr; margin-bottom: 15px; }
+
+        .daily-quote { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; text-align: center; max-width: 85%; line-height: 1.4; opacity: 0.9; text-shadow: 0 1px 3px rgba(0,0,0,0.8); direction: ltr; font-style: italic; }
+
+        .view-section { display: none; padding: 25px 20px; animation: fadeIn 0.4s; }
         .view-section.active { display: block; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from {opacity:0; transform: translateY(10px);} to {opacity:1; transform: translateY(0);} }
 
-        /* كارت المهمة */
-        .task-card { display: flex; justify-content: space-between; align-items: center; padding: 16px; border: 1px solid #e0e0e0; border-radius: 12px; margin-bottom: 12px; background: #fff; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .task-card.done { background: #f0fff4; border-color: #bbf7d0; }
-        .task-card.done h3 { text-decoration: line-through; color: #aaa; }
-        .check-btn { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #ddd; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 1.2rem; transition: 0.2s; }
-        .task-card.done .check-btn { background: var(--success); border-color: var(--success); color: white; }
+        .sortable-ghost { opacity: 0.4; background: var(--bg-main) !important; border: 2px dashed var(--accent) !important; box-shadow: none !important; }
 
-        /* الشارت */
-        .stats-box { background: #fff; padding: 25px; border-radius: 15px; border: 1px solid #eee; text-align: center; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.03); }
-        .chart-container { position: relative; height: 250px; width: 100%; display: flex; justify-content: center; margin-bottom: 20px; }
+        .task-card { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; background: var(--bg-card); border-radius: 16px; margin-bottom: 15px; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid var(--border-color); }
+        .task-card:hover { border-color: var(--accent); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 0 15px var(--accent-glow); }
+        .task-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; transition: color 0.3s; }
+        
+        .task-tag { font-size: 0.75rem; font-weight: 800; padding: 3px 10px; border-radius: 8px; margin-left: 10px; background: rgba(255,255,255,0.1); display: inline-block; font-family: 'Cairo', sans-serif;}
+        .task-meta { display: flex; align-items: center; margin-top: 5px; }
+        .task-card small { font-family: 'Montserrat', sans-serif; color: var(--text-secondary); font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; direction: ltr; display: inline-block; }
+        
+        .task-card.done { background: var(--success-bg); border-color: rgba(16, 185, 129, 0.3); }
+        .task-card.done h3, .task-card.done small, .task-card.done .task-tag { text-decoration: line-through; color: var(--text-secondary); opacity: 0.6; }
+        
+        .check-btn { width: 42px; height: 42px; min-width: 42px; border-radius: 50%; border: 2px solid var(--border-color); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: transparent; font-size: 1.3rem; transition: all 0.3s; }
+        .task-card.done .check-btn { background: var(--success); border-color: var(--success); color: white; animation: successPulse 2s infinite; }
 
-        /* الشهادة */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .certificate-paper { background: #fff; width: 90%; max-width: 500px; padding: 40px 20px; border: 8px double #111; text-align: center; position: relative; box-shadow: 0 0 60px rgba(0,0,0,0.5); }
-        .corner { position: absolute; width: 30px; height: 30px; border-top: 5px solid var(--gold); border-left: 5px solid var(--gold); }
-        .tr { top: 15px; right: 15px; transform: rotate(90deg); } .tl { top: 15px; left: 15px; } .br { bottom: 15px; right: 15px; transform: rotate(180deg); } .bl { bottom: 15px; left: 15px; transform: rotate(-90deg); }
-        .cert-header { font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: 2px; border-bottom: 2px solid var(--gold); display: inline-block; padding-bottom: 10px; margin-bottom: 20px; }
-        .cert-name { font-size: 1.6rem; font-weight: 900; color: #000; margin: 10px 0; display: block; }
-        .signature-section { display: flex; justify-content: space-around; align-items: flex-end; margin-top: 30px; }
-        .digital-signature { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #002244; transform: rotate(-5deg); margin-bottom: 5px; }
-        .official-seal { width: 70px; height: 70px; border: 3px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 5px; color: var(--gold); font-weight: bold; font-family: serif; }
-        .seal-inner { border: 1px dashed var(--gold); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .action-btns { margin-top: 25px; display: flex; gap: 10px; justify-content: center; }
-        .btn-act { padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .btn-print { background: #000; color: #fff; } .btn-close { background: #eee; color: #333; }
+        .stats-box { background: var(--bg-card); padding: 30px 20px; border-radius: 20px; text-align: center; margin-top: 10px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); }
+        .chart-container { position: relative; height: 220px; width: 100%; display: flex; justify-content: center; margin-bottom: 30px; }
 
-        /* نافذة التثبيت الذكية (IOS/Android) */
-        .install-popup { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; padding: 20px; border-top-left-radius: 20px; border-top-right-radius: 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 3000; display: none; text-align: center; animation: slideUp 0.5s ease; }
+        .install-popup { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); padding: 25px 20px; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -10px 25px rgba(0,0,0,0.3); z-index: 3000; display: none; text-align: center; animation: slideUp 0.5s ease; border-top: 1px solid var(--border-color); color: var(--text-primary); }
         @keyframes slideUp { from {transform: translateY(100%);} to {transform: translateY(0);} }
-        .ios-arrow { animation: bounceArrow 1.5s infinite; font-size: 2rem; margin-top: 10px; display: block; }
-        @keyframes bounceArrow { 0%, 100% {transform: translateY(0);} 50% {transform: translateY(10px);} }
+        .ios-arrow { animation: bounceArrow 1.5s infinite; font-size: 2rem; margin-top: 10px; display: block; color: var(--accent); }
+        
+        .btn-act { font-family: 'Cairo', sans-serif; padding: 14px 25px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 1rem; width: 100%; color: white; transition: 0.3s; background: linear-gradient(270deg, #f59e0b, #ea580c, #f43f5e, #f59e0b); background-size: 300% 300%; animation: gradientMove 3s ease infinite, pulseGlow 2s infinite; }
+        .btn-act:active { transform: scale(0.98); }
 
-        @media print {
-            body * { visibility: hidden; }
-            .modal-overlay, .certificate-paper, .certificate-paper * { visibility: visible; }
-            .modal-overlay { position: absolute; left: 0; top: 0; background: none; }
-            .certificate-paper { box-shadow: none; border: 5px solid #000; width: 100%; position: absolute; left: 0; top: 0; }
-            .action-btns { display: none; }
-        }
+        .day-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 5px 0 15px; margin-bottom: 25px; scrollbar-width: none; direction: ltr; }
+        .day-scroller::-webkit-scrollbar { display: none; }
+        .day-chip { font-family: 'Montserrat', sans-serif; padding: 12px 22px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 30px; cursor: pointer; font-weight: 700; white-space: nowrap; color: var(--text-secondary); transition: all 0.3s; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .day-chip.active { background: var(--bg-card); color: var(--accent); border-color: var(--accent); animation: pulseGlow 2s infinite; font-weight: 900; }
+        
+        .input-group { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; background: var(--bg-card); padding: 12px; border-radius: 16px; border: 1px solid var(--border-color); }
+        .input-style { flex: 1; min-width: 100px; padding: 12px 15px; border: none; background: rgba(0,0,0,0.2); border-radius: 10px; font-size: 0.95rem; outline: none; color: var(--text-primary); font-weight: 600; font-family: 'Cairo', sans-serif; }
+        .input-style::placeholder { color: var(--text-secondary); opacity: 0.7; }
+        input[type="time"] { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--accent); direction: ltr; }
+        input[type="time"]::-webkit-calendar-picker-indicator { filter: invert(0.7) sepia(1) saturate(5) hue-rotate(350deg); cursor: pointer; }
+        select.input-style { appearance: none; cursor: pointer; color: var(--accent); font-weight: 700; }
+        select.input-style option { background: var(--bg-card); color: var(--text-primary); }
+        
+        .add-btn { width: 100%; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: 0.3s; background: linear-gradient(270deg, #f59e0b, #ea580c, #f43f5e, #f59e0b); background-size: 300% 300%; animation: gradientMove 3s ease infinite, pulseGlow 2s infinite; }
+        .add-btn:active { transform: scale(0.98); }
 
-        .day-scroller { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 10px; margin-bottom: 20px; scrollbar-width: none; }
-        .day-chip { padding: 8px 16px; background: #e0e0e0; border-radius: 20px; cursor: pointer; font-weight: bold; white-space: nowrap; }
-        .day-chip.active { background: var(--accent-black); color: #fff; }
-        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 10px; z-index: 1000; }
-        .nav-btn { background: none; border: none; font-weight: bold; color: #bbb; cursor: pointer; font-size: 0.8rem; display: flex; flex-direction: column; align-items: center; }
-        .nav-btn.active { color: var(--accent-black); } .nav-icon { font-size: 1.2rem; margin-bottom: 2px; }
+        .navbar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); box-shadow: 0 -5px 20px rgba(0,0,0,0.5); display: flex; justify-content: space-around; padding: 12px 10px 25px; z-index: 1000; border-top-left-radius: 25px; border-top-right-radius: 25px; border-top: 1px solid var(--border-color); direction: rtl; }
+        .nav-btn { font-family: 'Cairo', sans-serif; background: none; border: none; font-weight: 700; color: var(--text-secondary); cursor: pointer; font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s; opacity: 0.7; }
+        .nav-btn.active { color: var(--accent); opacity: 1; } 
+        .nav-icon { font-size: 1.5rem; margin-bottom: 5px; transition: transform 0.3s; display: block; background: transparent; }
+        .nav-btn.active .nav-icon { transform: translateY(-4px); animation: textGlow 2s infinite; }
 
+        .section-title { font-family: 'Cairo', sans-serif; margin: 10px 0 25px; font-size: 1.5rem; font-weight: 900; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; display: inline-block; width: 8px; height: 25px; border-radius: 4px; margin-left: 10px; background: linear-gradient(180deg, #f59e0b, #ea580c); box-shadow: 0 0 10px var(--accent-glow); animation: pulseGlow 2s infinite; }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <img src="icon.jpg" class="splash-logo" alt="Logo">
-        <div class="splash-text">روتين العظماء</div>
+        <div style="font-size: 4rem; animation: textGlow 2s infinite;">🚀</div>
+        <div class="splash-text">روتينز</div>
+        <div class="splash-subtitle">ROUTINZ</div>
     </div>
 
     <div id="install-prompt" class="install-popup">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h3 style="margin:0">📲 تثبيت التطبيق</h3>
-            <span onclick="closeInstallPrompt()" style="font-size:1.5rem; cursor:pointer;">&times;</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-family: 'Cairo', sans-serif;">
+            <h3 style="margin:0; font-weight:800; color: var(--text-primary);">📲 تثبيت Routinz</h3>
+            <span onclick="closeInstallPrompt()" style="font-size:1.8rem; cursor:pointer; color:var(--text-secondary);">&times;</span>
         </div>
-        <p style="color:#555; font-size:0.9rem; margin-bottom:15px;" id="install-text">أضف التطبيق للشاشة الرئيسية لتجربة كاملة.</p>
-        <div id="ios-instruction" style="display:none;">
-            اضغط على زر المشاركة <span style="font-size:1.2rem">⎋</span> بالأسفل، ثم اختر <strong>"إضافة إلى الصفحة الرئيسية"</strong>.
+        <p style="font-family: 'Cairo', sans-serif; color:var(--text-secondary); font-size:0.95rem; margin-bottom:20px; font-weight: 600;" id="install-text">أضف التطبيق للشاشة الرئيسية لتجربة استخدام أسرع وأكثر سلاسة.</p>
+        <div id="ios-instruction" style="font-family: 'Cairo', sans-serif; display:none; background:var(--bg-main); padding:15px; border-radius:12px; border:1px solid var(--border-color); color: var(--text-secondary);">
+            اضغط على زر المشاركة <span style="font-size:1.2rem; color:var(--accent); animation: textGlow 2s infinite;">⎋</span> بالأسفل، ثم اختر <br><strong style="color:var(--text-primary);">"إضافة إلى الصفحة الرئيسية"</strong>.
             <span class="ios-arrow">⬇</span>
         </div>
-        <button id="android-install-btn" class="btn-act btn-print" style="width:100%; display:none;">تثبيت الآن</button>
+        <button id="android-install-btn" class="btn-act" style="display:none;">تثبيت الآن 🚀</button>
     </div>
 
     <div class="app-container">
-        <div class="sketch-header">
-            <img src="https://images.unsplash.com/photo-1516849841032-87cbac4d88f7?q=80&w=1000&auto=format&fit=crop" class="sketch-img">
-            <div class="header-content">
-                <div class="avatars-row">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Elon_Musk_Royal_Society_%28crop2%29.jpg/800px-Elon_Musk_Royal_Society_%28crop2%29.jpg" class="mini-avatar">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg/800px-Jeff_Bezos_at_Amazon_Spheres_Grand_Opening_in_Seattle_-_2018_%2839074799225%29_%28cropped%29.jpg" class="mini-avatar">
-                </div>
-                <h1 style="font-size: 1.5rem; font-weight: 900;">روتين العظماء</h1>
-                <p id="headerDate" style="opacity: 0.8; font-size: 0.9rem;">--/--/----</p>
+        <div class="hero-header">
+            <div class="streak-counter">
+                <span class="streak-fire">🔥</span>
+                <span id="streakCount">0</span>
             </div>
+            <h1>روتينز</h1>
+            <div class="subtitle">ROUTINZ</div>
+            <p id="headerDate">--/--/----</p>
+            <div class="daily-quote" id="dailyQuote">"Discipline equals freedom."</div>
         </div>
 
         <div id="viewToday" class="view-section active">
-            <h2 style="margin: 20px 0;">قائمة اليوم 📝</h2>
+            <h2 class="section-title">مهام اليوم </h2>
             <div id="tasksList"></div>
-            <div id="emptyToday" style="text-align: center; margin-top: 50px; color: #999;">القائمة فارغة.<br>قم ببناء روتينك من الجدول.</div>
+            <div id="emptyToday" style="font-family: 'Cairo', sans-serif; text-align: center; margin-top: 80px; color: var(--text-secondary); font-weight: 600;">
+                <div style="font-size: 4rem; margin-bottom: 15px; opacity: 0.5;">🪐</div>
+                القائمة فارغة.<br>قم بالتخطيط لرحلتك من قسم "الجدول".
+            </div>
         </div>
 
         <div id="viewPlan" class="view-section">
-            <h3 style="margin: 20px 0;">تعديل الجدول 📅</h3>
+            <h3 class="section-title">تخطيط المهام </h3>
             <div class="day-scroller" id="dayScroller"></div>
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <input type="text" id="taskInput" placeholder="اسم المهمة" style="flex:2; padding:10px; border:1px solid #ddd; border-radius:5px;">
-                <input type="time" id="timeInput" style="flex:1; padding:10px; border:1px solid #ddd; border-radius:5px;">
-                <button onclick="addTask()" style="background:#000; color:#fff; border:none; padding:0 20px; border-radius:5px; font-weight:bold;">+</button>
+            
+            <div class="input-group">
+                <input type="text" id="taskInput" class="input-style" placeholder="اسم المهمة القادمة..." style="flex: 1 1 100%;">
+                
+                <div style="display: flex; gap: 10px; width: 100%;">
+                    <select id="taskTag" class="input-style" style="flex:2;">
+                        <option value="🎯 عام">🎯 عام</option>
+                        <option value="🧠 ذكاء اصطناعي وبرمجة">🧠 ذكاء اصطناعي وبرمجة</option>
+                        <option value="🎨 تصميم ومونتاج">🎨 تصميم ومونتاج</option>
+                        <option value="💪 صحة ودايت">💪 صحة ودايت</option>
+                        <option value="💼 مشاريع وبزنس">💼 مشاريع وبزنس</option>
+                        <option value="☕ تطوير وقهوة">☕ تطوير وقهوة</option>
+                    </select>
+                    <input type="time" id="timeInput" class="input-style" style="flex:1;">
+                </div>
+                
+                <button onclick="addTask()" class="add-btn">إضافة المهمة 🚀</button>
             </div>
+            
+            <div style="color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 10px; text-align: center;">💡 يمكنك الترتيب بالسحب والإفلات (Drag & Drop)</div>
             <div id="routineList"></div>
         </div>
 
         <div id="viewStats" class="view-section">
-            <h3 style="margin: 20px 0;">الإحصائيات الشهرية 📊</h3>
+            <h3 class="section-title">مؤشرات الأداء </h3>
             <div class="stats-box">
                 <div class="chart-container"><canvas id="myChart"></canvas></div>
-                <div style="display:flex; justify-content:space-around; margin-top:20px;">
-                    <div><h3 id="statDone" style="color:#27ae60; margin:0">0</h3><small>منجزة</small></div>
-                    <div><h3 id="statMissed" style="color:#999; margin:0">0</h3><small>متبقية</small></div>
+                <div style="display:flex; justify-content:space-around; margin-top:15px; border-top: 1px solid var(--border-color); padding-top: 25px; font-family: 'Cairo', sans-serif;">
+                    <div>
+                        <h3 id="statDone" style="font-family: 'Montserrat', sans-serif; color:var(--success); font-size: 2.2rem; margin:0; animation: textGlow 3s infinite;">0</h3>
+                        <small style="color:var(--text-secondary); font-weight:700;">مكتملة</small>
+                    </div>
+                    <div>
+                        <h3 id="statMissed" style="font-family: 'Montserrat', sans-serif; color:var(--text-primary); font-size: 2.2rem; margin:0">0</h3>
+                        <small style="color:var(--text-secondary); font-weight:700;">متبقية</small>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="certModal">
-        <div class="certificate-paper">
-            <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
-            <div class="cert-header">Certificate of Completion</div>
-            <div style="font-size: 1.1rem; color: #555;">يشهد هذا بأن الأسطورة <span class="cert-name" id="userName">المُنجز المثابر</span> قد أتم بنجاح جميع المهام المجدولة لتاريخ <span id="certDate" style="font-weight:bold; color:#000; display:block; margin-top:5px;">--/--/----</span></div>
-            <div class="signature-section">
-                <div style="text-align:center"><div class="digital-signature" id="sigText">Elon Musk</div><div style="height:2px; background:#333; width:100px; margin:0 auto;"></div><div style="font-size:0.8rem; font-weight:bold; margin-top:5px;">Signature</div></div>
-                <div style="text-align:center"><div class="official-seal"><div class="seal-inner">★</div></div><div style="font-size:0.8rem; font-weight:bold;">Official Seal</div></div>
-            </div>
-            <div class="action-btns"><button class="btn-act btn-print" onclick="window.print()">🖨️ طباعة</button><button class="btn-act btn-close" onclick="closeCert()">إغلاق</button></div>
-        </div>
-    </div>
-
     <div class="navbar">
-        <button class="nav-btn active" onclick="switchTab('today')" id="navToday"><span class="nav-icon">📝</span> اليوم</button>
+        <button class="nav-btn active" onclick="switchTab('today')" id="navToday"><span class="nav-icon">🚀</span> اليوم</button>
         <button class="nav-btn" onclick="switchTab('plan')" id="navPlan"><span class="nav-icon">📅</span> الجدول</button>
-        <button class="nav-btn" onclick="switchTab('stats')" id="navStats"><span class="nav-icon">📊</span> إحصائيات</button>
+        <button class="nav-btn" onclick="switchTab('stats')" id="navStats"><span class="nav-icon">📈</span> إحصائيات</button>
     </div>
 
     <script>
-        // --- المنطق الخاص بالتثبيت (Install Logic) ---
-        let deferredPrompt;
+        const quotes = [
+            "\"Discipline equals freedom.\" - Jocko Willink",
+            "\"We are what we repeatedly do. Excellence is a habit.\" - Aristotle",
+            "\"The future depends on what you do today.\" - Mahatma Gandhi",
+            "\"Don't stop when you're tired. Stop when you're done.\" - David Goggins",
+            "\"Success is the sum of small efforts, repeated daily.\" - Robert Collier",
+            "\"Do something today that your future self will thank you for.\"",
+            "\"Great acts are made up of small deeds.\" - Lao Tzu"
+        ];
+
+        const successAudio = new Audio('https://www.myinstants.com/media/sounds/discord-notification.mp3');
+        successAudio.volume = 0.4; 
+        successAudio.preload = 'auto'; 
+
+        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         
+        let routine = JSON.parse(localStorage.getItem('routinz_v28')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_routinz_v28')) || {};
+        let currentPlanDay = '';
+        let chartInstance = null;
+        let deferredPrompt;
+
         window.onload = function() {
-            // إخفاء السبلاش بعد ثانيتين
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
                 setTimeout(() => { splash.style.display = 'none'; }, 500);
-                
-                // فحص التثبيت بعد التحميل
                 checkInstall();
             }, 2500);
 
             const now = new Date();
             const dayName = daysEn[now.getDay()];
-            document.getElementById('headerDate').innerText = `${daysAr[dayName]} | ${now.toLocaleDateString('ar-SA')}`;
+            
+            const dayStr = now.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+            const monthStr = now.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+            document.getElementById('headerDate').innerText = `${dayStr} | ${monthStr} ${now.getDate()}, ${now.getFullYear()}`;
+            
+            const quoteIndex = now.getDate() % quotes.length;
+            document.getElementById('dailyQuote').innerText = quotes[quoteIndex];
+            
             currentPlanDay = dayName;
-            renderScroller(); renderRoutine(); renderToday();
-            setTimeout(initChart, 500); setTimeout(updateStats, 600);
+            
+            new Sortable(document.getElementById('routineList'), {
+                animation: 200,
+                ghostClass: 'sortable-ghost',
+                handle: '.task-card', 
+                onEnd: function (evt) {
+                    const item = routine[currentPlanDay].splice(evt.oldIndex, 1)[0];
+                    routine[currentPlanDay].splice(evt.newIndex, 0, item);
+                    localStorage.setItem('routinz_v28', JSON.stringify(routine));
+                    if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); }
+                }
+            });
+
+            renderScroller(); 
+            renderRoutine(); 
+            renderToday();
+            setTimeout(initChart, 500); 
+            setTimeout(updateStats, 600);
+            updateStreakDisplay();
         };
 
-        // الكشف عن الجهاز وعرض نافذة التثبيت المناسبة
-        function checkInstall() {
-            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-            
-            // إذا لم يكن مثبتاً (ليس في وضع Standalone)
-            if (!isInStandaloneMode && !window.matchMedia('(display-mode: standalone)').matches) {
-                const prompt = document.getElementById('install-prompt');
-                
-                if (isIos) {
-                    // للأيفون: عرض التعليمات
-                    document.getElementById('ios-instruction').style.display = 'block';
-                    setTimeout(() => { prompt.style.display = 'block'; }, 3000); // إظهار بعد 3 ثواني
-                } else {
-                    // للأندرويد: سيتم التعامل معه عبر الحدث beforeinstallprompt
+        function playProfessionalDing() {
+            try {
+                if (navigator.vibrate) navigator.vibrate(30); 
+                successAudio.currentTime = 0; 
+                successAudio.play();
+            } catch(e) { console.log("Audio play prevented."); }
+        }
+
+        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v28')) || { count: 0, last100Date: null };
+        
+        function updateStreakDisplay() {
+            document.getElementById('streakCount').innerText = streakData.count;
+        }
+
+        function checkDailyStreak(todayTotal, todayDone) {
+            const todayStr = new Date().toLocaleDateString('en-CA');
+            if (todayTotal > 0 && todayDone === todayTotal) {
+                if (streakData.last100Date !== todayStr) {
+                    let yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    if (streakData.last100Date === yesterday.toLocaleDateString('en-CA')) {
+                        streakData.count++; 
+                    } else {
+                        streakData.count = 1; 
+                    }
+                    streakData.last100Date = todayStr;
+                    localStorage.setItem('streak_routinz_v28', JSON.stringify(streakData));
+                    updateStreakDisplay();
                 }
+            } else if (streakData.last100Date === todayStr && todayDone < todayTotal) {
+                let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+                streakData.last100Date = yesterday.toLocaleDateString('en-CA');
+                streakData.count = Math.max(0, streakData.count - 1);
+                localStorage.setItem('streak_routinz_v28', JSON.stringify(streakData));
+                updateStreakDisplay();
             }
         }
 
-        // التقاط حدث التثبيت للأندرويد
+        function checkInstall() {
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+            if (!isInStandaloneMode && !window.matchMedia('(display-mode: standalone)').matches) {
+                const prompt = document.getElementById('install-prompt');
+                if (isIos) {
+                    document.getElementById('ios-instruction').style.display = 'block';
+                    setTimeout(() => { prompt.style.display = 'block'; }, 3000);
+                }
+            }
+        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
+            e.preventDefault(); deferredPrompt = e;
             const prompt = document.getElementById('install-prompt');
             const btn = document.getElementById('android-install-btn');
-            
-            document.getElementById('install-text').innerText = "قم بتثبيت التطبيق الآن لتجربة أسرع.";
-            btn.style.display = 'block';
-            prompt.style.display = 'block';
-
+            btn.style.display = 'block'; prompt.style.display = 'block';
             btn.addEventListener('click', () => {
-                prompt.style.display = 'none';
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    deferredPrompt = null;
-                });
+                prompt.style.display = 'none'; deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => { deferredPrompt = null; });
             });
         });
+        
+        function closeInstallPrompt() { document.getElementById('install-prompt').style.display = 'none'; }
 
-        function closeInstallPrompt() {
-            document.getElementById('install-prompt').style.display = 'none';
+        function getTagColor(tag) {
+            if(!tag) return '';
+            if(tag.includes('ذكاء')) return 'color: #38bdf8; background: rgba(56, 189, 248, 0.1);';
+            if(tag.includes('تصميم')) return 'color: #c084fc; background: rgba(192, 132, 252, 0.1);';
+            if(tag.includes('صحة')) return 'color: #4ade80; background: rgba(74, 222, 128, 0.1);';
+            if(tag.includes('مشاريع')) return 'color: #fcd34d; background: rgba(252, 211, 77, 0.1);';
+            if(tag.includes('تطوير')) return 'color: #fdba74; background: rgba(253, 186, 116, 0.1);';
+            return 'color: #94a3b8; background: rgba(148, 163, 184, 0.1);';
         }
-
-        // --- باقي كود التطبيق ---
-        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        const daysAr = {'Sunday': 'الأحد', 'Monday': 'الإثنين', 'Tuesday': 'الثلاثاء', 'Wednesday': 'الأربعاء', 'Thursday': 'الخميس', 'Friday': 'الجمعة', 'Saturday': 'السبت'};
-        let routine = JSON.parse(localStorage.getItem('routine_v17')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_v17')) || {};
-        let currentPlanDay = '';
-        let chartInstance = null;
 
         function renderToday() {
             const now = new Date();
             const dayName = daysEn[now.getDay()];
             const dateKey = now.toLocaleDateString('en-CA');
             const list = document.getElementById('tasksList');
-            const tasks = routine[dayName] || [];
+            
+            if(!routine[dayName]) routine[dayName] = [];
+            const tasks = routine[dayName];
+            
             list.innerHTML = '';
             document.getElementById('emptyToday').style.display = tasks.length === 0 ? 'block' : 'none';
-            let completedCount = 0;
-            tasks.sort((a, b) => (a.time || '23:59').localeCompare(b.time || '23:59'));
+            
             tasks.forEach(task => {
                 const uid = `${dateKey}_${task.name}_${task.time}`;
                 const isDone = history[uid] === true;
-                if (isDone) completedCount++;
                 const div = document.createElement('div');
                 div.className = `task-card ${isDone ? 'done' : ''}`;
-                div.innerHTML = `<div><h3 style="margin:0">${task.name}</h3><small style="color:#888">${tConvert(task.time)}</small></div><button class="check-btn" onclick="toggleTask('${uid}')">✔</button>`;
+                const tagHtml = task.tag ? `<span class="task-tag" style="${getTagColor(task.tag)}">${task.tag}</span>` : '';
+                
+                div.innerHTML = `
+                    <div style="flex:1;">
+                        <h3>${task.name}</h3>
+                        <div class="task-meta">
+                            <small>${tConvert(task.time)}</small>
+                            ${tagHtml}
+                        </div>
+                    </div>
+                    <button class="check-btn" onclick="toggleTask('${uid}')">✔</button>
+                `;
                 list.appendChild(div);
             });
-            if (tasks.length > 0 && completedCount === tasks.length) { setTimeout(() => { showCertificate(); }, 600); }
         }
-
-        function showCertificate() {
-            const signer = Math.random() > 0.5 ? "Elon Musk" : "Jeff Bezos";
-            document.getElementById('certDate').innerText = new Date().toLocaleDateString('en-GB');
-            document.getElementById('sigText').innerText = signer;
-            document.getElementById('certModal').style.display = 'flex';
+        
+        function toggleTask(id) { 
+            const wasDone = history[id];
+            history[id] = !wasDone; 
+            localStorage.setItem('history_routinz_v28', JSON.stringify(history)); 
+            
+            if (!wasDone) playProfessionalDing(); 
+            
+            renderToday(); 
+            updateStats(); 
         }
-        function closeCert() { document.getElementById('certModal').style.display = 'none'; }
-        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_v17', JSON.stringify(history)); renderToday(); updateStats(); }
         
         function initChart() {
             const ctx = document.getElementById('myChart');
             if(ctx) {
                 chartInstance = new Chart(ctx, {
                     type: 'doughnut',
-                    data: { labels: ['منجزة', 'متبقية'], datasets: [{ data: [0, 1], backgroundColor: ['#27ae60', '#eee'], borderWidth: 0 }] },
-                    options: { cutout: '70%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    data: { labels: ['منجزة', 'متبقية'], datasets: [{ data: [0, 1], backgroundColor: ['#10b981', '#334155'], borderWidth: 0 }] },
+                    options: { cutout: '75%', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
                 });
             }
         }
+        
         function updateStats() {
-            const now = new Date(); const currentMonth = now.getMonth(); let done = 0;
-            for(let key in history) { if(history[key]) { const [y, m, d] = key.split('_')[0].split('-').map(Number); if(m - 1 === currentMonth) done++; } }
-            const dayName = daysEn[now.getDay()];
+            const dayName = daysEn[new Date().getDay()];
             const todayTotal = (routine[dayName] || []).length;
-            const todayDone = document.querySelectorAll('.task-card.done').length;
+            const todayDone = document.querySelectorAll('#viewToday .task-card.done').length;
             const missed = Math.max(0, todayTotal - todayDone);
-            document.getElementById('statDone').innerText = done;
+            
+            document.getElementById('statDone').innerText = todayDone;
             document.getElementById('statMissed').innerText = missed;
-            if(chartInstance) { chartInstance.data.datasets[0].data = todayTotal === 0 ? [0, 1] : [todayDone, missed]; chartInstance.update(); }
+            
+            if(chartInstance) { 
+                chartInstance.data.datasets[0].data = todayTotal === 0 ? [0, 1] : [todayDone, missed]; 
+                chartInstance.update(); 
+            }
+            
+            checkDailyStreak(todayTotal, todayDone);
         }
+
         function renderScroller() {
             const box = document.getElementById('dayScroller'); box.innerHTML = '';
             const todayIdx = new Date().getDay();
@@ -314,39 +424,71 @@
             sorted.forEach(day => {
                 const chip = document.createElement('div');
                 chip.className = `day-chip ${day === currentPlanDay ? 'active' : ''}`;
-                chip.innerText = daysAr[day];
-                chip.onclick = () => { currentPlanDay = day; renderScroller(); renderRoutine(); };
+                chip.innerText = day.substring(0, 3).toUpperCase();
+                chip.onclick = () => { 
+                    currentPlanDay = day; 
+                    renderScroller(); 
+                    renderRoutine(); 
+                };
                 box.appendChild(chip);
             });
         }
+
         function renderRoutine() {
             const list = document.getElementById('routineList');
-            const tasks = routine[currentPlanDay] || [];
+            if(!routine[currentPlanDay]) routine[currentPlanDay] = [];
+            const tasks = routine[currentPlanDay];
             list.innerHTML = '';
+            
             tasks.forEach((task, idx) => {
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;"><span>${task.name} <small style="color:#aaa">${tConvert(task.time)}</small></span><span onclick="delTask(${idx})" style="color:red; cursor:pointer;">✕</span></div>`;
+                const tagHtml = task.tag ? `<span class="task-tag" style="${getTagColor(task.tag)}">${task.tag}</span>` : '';
+                list.innerHTML += `
+                    <div class="task-card" style="cursor: grab;">
+                        <div style="flex:1;">
+                            <div style="font-weight:700; color:var(--text-primary); margin-bottom:2px;">${task.name}</div>
+                            <div class="task-meta"><small style="color:var(--text-secondary);">${tConvert(task.time)}</small>${tagHtml}</div>
+                        </div>
+                        <div onclick="delTask(${idx})" style="color:var(--danger); background:rgba(239, 68, 68, 0.1); width:32px; height:32px; display:flex; align-items:center; justify-content:center; border-radius:10px; cursor:pointer; font-weight:bold; transition:0.2s;">✕</div>
+                    </div>`;
             });
         }
+
         function addTask() {
             const name = document.getElementById('taskInput').value;
             const time = document.getElementById('timeInput').value;
+            const tag = document.getElementById('taskTag').value;
             if(!name) return;
-            routine[currentPlanDay].push({name, time});
-            localStorage.setItem('routine_v17', JSON.stringify(routine));
+            
+            if(!routine[currentPlanDay]) routine[currentPlanDay] = [];
+            
+            routine[currentPlanDay].push({name, time, tag});
+            localStorage.setItem('routinz_v28', JSON.stringify(routine));
+            
             document.getElementById('taskInput').value = '';
-            renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
+            document.getElementById('timeInput').value = '';
+            
+            renderRoutine(); 
+            
+            if(currentPlanDay === daysEn[new Date().getDay()]) { 
+                renderToday(); 
+                updateStats(); 
+            }
         }
+
         function delTask(idx) {
             routine[currentPlanDay].splice(idx, 1);
-            localStorage.setItem('routine_v17', JSON.stringify(routine));
-            renderRoutine(); if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
+            localStorage.setItem('routinz_v28', JSON.stringify(routine));
+            renderRoutine(); 
+            if(currentPlanDay === daysEn[new Date().getDay()]) { renderToday(); updateStats(); }
         }
-        function tConvert (time) {
-            if(!time) return '';
-            time = time.toString ().match (/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
-            if (time.length > 1) { time = time.slice (1); time[5] = +time[0] < 12 ? ' ص' : ' م'; time[0] = +time[0] % 12 || 12; }
-            return time.join ('');
+
+        function tConvert(time) {
+            if(!time) return 'ALL DAY';
+            time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
+            if (time.length > 1) { time = time.slice(1); time[5] = +time[0] < 12 ? ' AM' : ' PM'; time[0] = +time[0] % 12 || 12; }
+            return time.join('');
         }
+
         function switchTab(t) {
             document.querySelectorAll('.view-section').forEach(e => e.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(e => e.classList.remove('active'));
