@@ -10,12 +10,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Routinz">
     
-    <link rel="apple-touch-icon" href="icon.jpg?v=10">
-    <link rel="icon" type="image/jpg" href="icon.jpg?v=10">
+    <link rel="apple-touch-icon" href="icon.jpg?v=11">
+    <link rel="icon" type="image/jpg" href="icon.jpg?v=11">
     
     <title>Routinz</title>
     
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%3Fv%3D10%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%3Fv%3D11%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,7 +45,6 @@
         @keyframes textNeon { 0%, 100% { text-shadow: 0 0 5px var(--accent-glow-light); } 50% { text-shadow: 0 0 15px var(--accent-glow), 0 0 30px var(--accent); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* شاشة البداية بالشعار فقط */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000 !important; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease-out, visibility 0.6s; }
         .splash-logo { width: 160px; height: auto; background: transparent; filter: drop-shadow(0 0 20px var(--accent-glow)); animation: pulseScale 2s infinite alternate; object-fit: contain; }
 
@@ -96,23 +95,11 @@
         .stats-box { background: var(--bg-card); padding: 35px 25px; border-radius: 25px; text-align: center; margin-top: 15px; border: 1px solid #222; }
         .chart-container { position: relative; height: 240px; width: 100%; display: flex; justify-content: center; margin-bottom: 35px; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.2)); }
 
-        /* --- حل مشكلة اختفاء نافذة التثبيت --- */
-        /* تم تغيير display:none إلى opacity و visibility ليتمكن الأنيميشن من العمل بشكل صحيح 100% */
-        .install-popup { 
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); 
-            width: 90%; max-width: 450px; background: rgba(0, 0, 0, 0.95); padding: 25px; 
-            border-radius: 25px; z-index: 3000; text-align: center; 
-            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
-            border: 2px solid var(--accent); color: var(--text-primary); 
-            backdrop-filter: blur(20px); box-shadow: 0 0 40px var(--accent-glow), inset 0 0 20px var(--accent-glow-light);
-            visibility: hidden; opacity: 0;
-        }
-        .install-popup.show { 
-            transform: translateX(-50%) translateY(0); 
-            visibility: visible; opacity: 1; 
-        }
+        /* نافذة التثبيت مطابقة للكود الأول الخاص بك */
+        .install-popup { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); width: 90%; max-width: 450px; background: rgba(0, 0, 0, 0.95); padding: 25px; border-radius: 25px; z-index: 3000; text-align: center; transition: all 0.5s ease; border: 2px solid var(--accent); color: var(--text-primary); backdrop-filter: blur(20px); box-shadow: 0 0 40px var(--accent-glow), inset 0 0 20px var(--accent-glow-light); display: none; opacity: 0; }
+        .install-popup.show { transform: translateX(-50%) translateY(0); opacity: 1; }
         
-        .btn-act { font-family: inherit; padding: 16px 30px; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 1.2rem; width: 100%; color: #000; background: var(--accent); transition: all 0.3s ease; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); animation: neonPulse 2s infinite; }
+        .btn-act { font-family: inherit; padding: 16px 30px; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 1.2rem; width: 100%; color: #000; background: var(--accent); transition: all 0.3s ease; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); animation: neonPulse 2s infinite; display: none; margin-top: 15px; }
         .btn-act:active { transform: scale(0.95); }
 
         .day-scroller { display: flex; overflow-x: auto; gap: 12px; padding: 10px 5px 20px; margin-bottom: 25px; scrollbar-width: none; direction: ltr; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
@@ -144,7 +131,7 @@
 <body>
 
     <div id="splash-screen">
-        <img src="icon.jpg?v=10" class="splash-logo" alt="Routinz Logo">
+        <img src="icon.jpg?v=11" class="splash-logo" alt="Routinz Logo">
     </div>
 
     <div class="lang-modal-overlay" id="langModal">
@@ -163,21 +150,16 @@
             <span onclick="closeInstallPrompt()" style="font-size:2rem; cursor:pointer; color:#888;">&times;</span>
         </div>
         
-        <p id="txt-install-desc" style="color:var(--text-primary); font-size:1.1rem; margin-bottom:25px; font-weight: 600; line-height: 1.6; display:none;">
+        <p id="txt-install-desc" style="color:var(--text-primary); font-size:1.1rem; margin-bottom:20px; font-weight: 600; line-height: 1.6; display:none;">
             أضف التطبيق للشاشة الرئيسية لتجربة أسرع وبدون إنترنت.
         </p>
-
-        <div id="android-manual-instruction" style="display:none; background:#111; padding:20px; border-radius:16px; border:1px dashed var(--accent); color: var(--text-primary); font-size: 1.1rem; line-height: 1.6;">
-            <span id="txt-android-manual-1">لتثبيت التطبيق، اضغط على النقاط الثلاث (⋮) أعلى المتصفح، ثم اختر</span><br>
-            <strong style="color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);" id="txt-android-manual-2">"إضافة إلى الشاشة الرئيسية"</strong>
-        </div>
 
         <div id="ios-instruction" style="display:none; background:#111; padding:20px; border-radius:16px; border:1px dashed var(--accent); color: var(--text-primary); font-size: 1.1rem;">
             <span id="txt-ios-share">اضغط على زر المشاركة</span> <span style="font-size:1.6rem; color:var(--accent);">⎋</span> <br> <span id="txt-ios-add" style="color:var(--accent); text-shadow: 0 0 10px var(--accent-glow); font-weight: 800;">إضافة إلى الصفحة الرئيسية</span>
             <span style="font-size: 2.2rem; margin-top: 15px; display: block; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow));">⬇</span>
         </div>
 
-        <button id="android-install-btn" class="btn-act" style="display:none; margin-top: 15px;"><span id="txt-install-btn">تثبيت الآن</span></button>
+        <button id="android-install-btn" class="btn-act"><span id="txt-install-btn">تثبيت الآن</span></button>
     </div>
 
     <div class="app-container">
@@ -255,14 +237,7 @@
     </div>
 
     <script>
-        // --- Service Worker وهمي لضمان التثبيت ---
-        if ('serviceWorker' in navigator) {
-            const swCode = "self.addEventListener('fetch', function(e) {});";
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log(err));
-        }
-
-        // --- نظام اللغات والترجمة ---
+        // --- نظام اللغات ---
         const dict = {
             ar: {
                 dir: "rtl", font: "'Cairo', sans-serif",
@@ -273,7 +248,6 @@
                 statsTitle: "مؤشرات الأداء", done: "مكتملة", missed: "متبقية",
                 installTitle: "🚀 تثبيت Routinz", installDesc: "أضف التطبيق للشاشة الرئيسية لتجربة أسرع وبدون إنترنت.", installBtn: "تثبيت الآن",
                 iosShare: "اضغط على زر المشاركة", iosAdd: "إضافة إلى الصفحة الرئيسية",
-                androidManual1: "لتثبيت التطبيق، اضغط على النقاط الثلاث (⋮) أعلى المتصفح، ثم اختر", androidManual2: "\"إضافة إلى الشاشة الرئيسية\"",
                 tags: { "عام": "🎯 عام", "برمجة": "🧠 برمجة و AI", "تصميم": "🎨 تصميم", "صحة": "💪 صحة", "بزنس": "💼 بزنس" },
                 allDay: "طوال اليوم"
             },
@@ -286,7 +260,6 @@
                 statsTitle: "Performance Stats", done: "Done", missed: "Remaining",
                 installTitle: "🚀 Install Routinz", installDesc: "Add the app to your home screen for a faster, offline experience.", installBtn: "Install Now",
                 iosShare: "Tap the share button", iosAdd: "Add to Home Screen",
-                androidManual1: "To install, tap the 3 dots (⋮) menu at the top, then select", androidManual2: "\"Add to Home screen\"",
                 tags: { "عام": "🎯 General", "برمجة": "🧠 Code & AI", "تصميم": "🎨 Design", "صحة": "💪 Health", "بزنس": "💼 Business" },
                 allDay: "ALL DAY"
             },
@@ -299,7 +272,6 @@
                 statsTitle: "Statistiques", done: "Terminé", missed: "Restant",
                 installTitle: "🚀 Installer Routinz", installDesc: "Ajoutez l'appli à l'écran d'accueil pour une expérience hors ligne.", installBtn: "Installer",
                 iosShare: "Appuyez sur partager", iosAdd: "Sur l'écran d'accueil",
-                androidManual1: "Pour installer, appuyez sur le menu (⋮) en haut, puis choisissez", androidManual2: "\"Ajouter à l'écran d'accueil\"",
                 tags: { "عام": "🎯 Général", "برمجة": "🧠 Code & IA", "تصميم": "🎨 Design", "صحة": "💪 Santé", "بزنس": "💼 Affaires" },
                 allDay: "TOUTE LA JOURNÉE"
             }
@@ -331,8 +303,6 @@
             document.getElementById('txt-install-btn').innerText = data.installBtn;
             document.getElementById('txt-ios-share').innerText = data.iosShare;
             document.getElementById('txt-ios-add').innerText = data.iosAdd;
-            document.getElementById('txt-android-manual-1').innerText = data.androidManual1;
-            document.getElementById('txt-android-manual-2').innerText = data.androidManual2;
 
             const selectTag = document.getElementById('taskTag');
             selectTag.innerHTML = '';
@@ -353,60 +323,59 @@
         function openLangModal() { document.getElementById('langModal').classList.add('show'); }
         function closeLangModal() { document.getElementById('langModal').classList.remove('show'); }
 
-        // --- نظام التثبيت الذكي والمضمون ---
-        let deferredPrompt = null;
-        let promptFired = false;
+        // --- كود التثبيت المأخوذ من أول نسخة والمضمون 100% ---
+        let deferredPrompt;
+
+        function checkIosInstall() {
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+
+            if (!isInStandaloneMode && !window.matchMedia('(display-mode: standalone)').matches) {
+                const promptEl = document.getElementById('install-prompt');
+                if (isIos) {
+                    document.getElementById('ios-instruction').style.display = 'block';
+                    promptEl.style.display = 'block';
+                    setTimeout(() => { promptEl.classList.add('show'); }, 100);
+                }
+            }
+        }
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            promptFired = true; 
-        });
+            const promptEl = document.getElementById('install-prompt');
+            const btn = document.getElementById('android-install-btn');
+            const desc = document.getElementById('txt-install-desc');
 
-        function checkInstallLogic() {
-            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
-            const isInStandaloneMode = ('standalone' in window.navigator) && window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            desc.style.display = 'block';
+            btn.style.display = 'block';
+            document.getElementById('ios-instruction').style.display = 'none';
 
-            if (!isInStandaloneMode) {
-                setTimeout(() => {
-                    const promptEl = document.getElementById('install-prompt');
-                    
-                    document.getElementById('txt-install-desc').style.display = 'none';
-                    document.getElementById('android-install-btn').style.display = 'none';
-                    document.getElementById('ios-instruction').style.display = 'none';
-                    document.getElementById('android-manual-instruction').style.display = 'none';
+            promptEl.style.display = 'block';
+            setTimeout(() => { promptEl.classList.add('show'); }, 100);
 
-                    if (isIos) {
-                        document.getElementById('ios-instruction').style.display = 'block';
-                    } else if (promptFired) {
-                        document.getElementById('txt-install-desc').style.display = 'block';
-                        document.getElementById('android-install-btn').style.display = 'block';
-                    } else {
-                        document.getElementById('android-manual-instruction').style.display = 'block';
-                    }
-                    
-                    promptEl.classList.add('show');
-                }, 2000); 
-            }
-        }
-
-        document.getElementById('android-install-btn').addEventListener('click', async () => {
-            document.getElementById('install-prompt').classList.remove('show');
-            if(deferredPrompt) {
+            btn.addEventListener('click', () => {
+                promptEl.classList.remove('show');
+                setTimeout(() => { promptEl.style.display = 'none'; }, 400);
                 deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
-                deferredPrompt = null;
-            }
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                });
+            });
         });
 
-        function closeInstallPrompt() { document.getElementById('install-prompt').classList.remove('show'); }
+        function closeInstallPrompt() { 
+            const promptEl = document.getElementById('install-prompt');
+            promptEl.classList.remove('show'); 
+            setTimeout(() => { promptEl.style.display = 'none'; }, 400);
+        }
 
         const quotes = [ "\"Discipline equals freedom.\"", "\"We are what we repeatedly do.\"", "\"The future depends on what you do today.\"", "\"Don't stop when you're tired. Stop when you're done.\"", "\"Success is the sum of small efforts.\"" ];
         const successAudio = new Audio('https://www.myinstants.com/media/sounds/discord-notification.mp3');
         successAudio.volume = 0.5; successAudio.preload = 'auto'; 
 
-        let routine = JSON.parse(localStorage.getItem('routinz_v38')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_routinz_v38')) || {};
+        let routine = JSON.parse(localStorage.getItem('routinz_v39')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_routinz_v39')) || {};
         let currentPlanDay = '';
         let chartInstance = null;
 
@@ -414,7 +383,7 @@
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
                 splash.style.opacity = '0';
-                setTimeout(() => { splash.style.visibility = 'hidden'; checkInstallLogic(); }, 600);
+                setTimeout(() => { splash.style.visibility = 'hidden'; checkIosInstall(); }, 600);
             }, 2500);
 
             currentPlanDay = daysInternal[new Date().getDay()];
@@ -427,7 +396,7 @@
                 onEnd: function (evt) {
                     const item = routine[currentPlanDay].splice(evt.oldIndex, 1)[0];
                     routine[currentPlanDay].splice(evt.newIndex, 0, item);
-                    localStorage.setItem('routinz_v38', JSON.stringify(routine));
+                    localStorage.setItem('routinz_v39', JSON.stringify(routine));
                     if(currentPlanDay === daysInternal[new Date().getDay()]) renderToday();
                 }
             });
@@ -437,7 +406,7 @@
 
         function playProfessionalDing() { try { if (navigator.vibrate) navigator.vibrate(30); successAudio.currentTime = 0; successAudio.play(); } catch(e) {} }
 
-        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v38')) || { count: 0, last100Date: null };
+        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v39')) || { count: 0, last100Date: null };
         function updateStreakDisplay() { document.getElementById('streakCount').innerText = streakData.count; }
         
         function checkDailyStreak(todayTotal, todayDone) {
@@ -447,13 +416,13 @@
                     let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                     streakData.count = (streakData.last100Date === yesterday.toLocaleDateString('en-CA')) ? streakData.count + 1 : 1;
                     streakData.last100Date = todayStr;
-                    localStorage.setItem('streak_routinz_v38', JSON.stringify(streakData)); updateStreakDisplay();
+                    localStorage.setItem('streak_routinz_v39', JSON.stringify(streakData)); updateStreakDisplay();
                 }
             } else if (streakData.last100Date === todayStr && todayDone < todayTotal) {
                 let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                 streakData.last100Date = yesterday.toLocaleDateString('en-CA');
                 streakData.count = Math.max(0, streakData.count - 1);
-                localStorage.setItem('streak_routinz_v38', JSON.stringify(streakData)); updateStreakDisplay();
+                localStorage.setItem('streak_routinz_v39', JSON.stringify(streakData)); updateStreakDisplay();
             }
         }
 
@@ -487,7 +456,7 @@
             });
         }
         
-        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v38', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
+        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v39', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
         
         function initChart() {
             const ctx = document.getElementById('myChart');
@@ -533,12 +502,12 @@
             const name = document.getElementById('taskInput').value, time = document.getElementById('timeInput').value, tag = document.getElementById('taskTag').value;
             if(!name) return;
             if(!routine[currentPlanDay]) routine[currentPlanDay] = [];
-            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v38', JSON.stringify(routine));
+            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v39', JSON.stringify(routine));
             document.getElementById('taskInput').value = ''; document.getElementById('timeInput').value = '';
             renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); }
         }
 
-        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v38', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
+        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v39', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
 
         function tConvert(time) {
             if(!time) return dict[currentLang].allDay; 
