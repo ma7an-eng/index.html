@@ -10,12 +10,12 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Routinz">
     
-    <link rel="apple-touch-icon" href="icon.jpg?v=9">
-    <link rel="icon" type="image/jpg" href="icon.jpg?v=9">
+    <link rel="apple-touch-icon" href="icon.jpg?v=10">
+    <link rel="icon" type="image/jpg" href="icon.jpg?v=10">
     
     <title>Routinz</title>
     
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%3Fv%3D9%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22%D8%B1%D9%88%D8%AA%D9%8A%D9%86%D8%B2%22%2C%22short_name%22%3A%22Routinz%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon.jpg%3Fv%3D10%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fjpg%22%7D%5D%7D">
     
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,6 +45,7 @@
         @keyframes textNeon { 0%, 100% { text-shadow: 0 0 5px var(--accent-glow-light); } 50% { text-shadow: 0 0 15px var(--accent-glow), 0 0 30px var(--accent); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* شاشة البداية بالشعار فقط */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000 !important; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.6s ease-out, visibility 0.6s; }
         .splash-logo { width: 160px; height: auto; background: transparent; filter: drop-shadow(0 0 20px var(--accent-glow)); animation: pulseScale 2s infinite alternate; object-fit: contain; }
 
@@ -59,9 +60,10 @@
         .lang-btn { position: absolute; top: 25px; inset-inline-end: 25px; background: rgba(0, 0, 0, 0.8); width: 45px; height: 45px; border-radius: 50%; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; color: #fff; box-shadow: 0 0 15px var(--accent-glow-light); backdrop-filter: blur(10px); transition: all 0.3s; z-index: 100; }
         .lang-btn:hover { box-shadow: 0 0 25px var(--accent-glow); transform: scale(1.05); }
 
-        .lang-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; display: none; justify-content: center; align-items: center; opacity: 0; transition: 0.3s; }
+        .lang-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 4000; visibility: hidden; opacity: 0; transition: all 0.3s ease; display: flex; justify-content: center; align-items: center; }
+        .lang-modal-overlay.show { visibility: visible; opacity: 1; }
         .lang-modal { background: #0a0a0a; border: 1px solid var(--accent); border-radius: 25px; padding: 25px; width: 85%; max-width: 350px; box-shadow: 0 0 40px var(--accent-glow); transform: scale(0.9); transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .lang-modal.show { transform: scale(1); }
+        .lang-modal-overlay.show .lang-modal { transform: scale(1); }
         .lang-option { display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid #222; transition: 0.3s; font-weight: 700; font-size: 1.1rem; }
         .lang-option:hover, .lang-option.active { border-color: var(--accent); background: rgba(255,107,0,0.1); box-shadow: 0 0 15px var(--accent-glow-light); }
 
@@ -94,9 +96,21 @@
         .stats-box { background: var(--bg-card); padding: 35px 25px; border-radius: 25px; text-align: center; margin-top: 15px; border: 1px solid #222; }
         .chart-container { position: relative; height: 240px; width: 100%; display: flex; justify-content: center; margin-bottom: 35px; filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.2)); }
 
-        /* نافذة التثبيت الكلاسيكية والذكية */
-        .install-popup { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); width: 90%; max-width: 450px; background: rgba(0, 0, 0, 0.95); padding: 25px; border-radius: 25px; z-index: 3000; display: none; text-align: center; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); border: 2px solid var(--accent); color: var(--text-primary); backdrop-filter: blur(20px); box-shadow: 0 0 40px var(--accent-glow), inset 0 0 20px var(--accent-glow-light); }
-        .install-popup.show { transform: translateX(-50%) translateY(0); }
+        /* --- حل مشكلة اختفاء نافذة التثبيت --- */
+        /* تم تغيير display:none إلى opacity و visibility ليتمكن الأنيميشن من العمل بشكل صحيح 100% */
+        .install-popup { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(150%); 
+            width: 90%; max-width: 450px; background: rgba(0, 0, 0, 0.95); padding: 25px; 
+            border-radius: 25px; z-index: 3000; text-align: center; 
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            border: 2px solid var(--accent); color: var(--text-primary); 
+            backdrop-filter: blur(20px); box-shadow: 0 0 40px var(--accent-glow), inset 0 0 20px var(--accent-glow-light);
+            visibility: hidden; opacity: 0;
+        }
+        .install-popup.show { 
+            transform: translateX(-50%) translateY(0); 
+            visibility: visible; opacity: 1; 
+        }
         
         .btn-act { font-family: inherit; padding: 16px 30px; border: none; border-radius: 16px; font-weight: 900; cursor: pointer; font-size: 1.2rem; width: 100%; color: #000; background: var(--accent); transition: all 0.3s ease; box-shadow: 0 0 20px var(--accent), 0 0 40px var(--accent-glow); animation: neonPulse 2s infinite; }
         .btn-act:active { transform: scale(0.95); }
@@ -117,7 +131,7 @@
         .add-btn { width: 100%; color: #000; border: none; padding: 16px; border-radius: 16px; font-weight: 900; font-size: 1.2rem; cursor: pointer; transition: all 0.3s ease; background: var(--accent); box-shadow: 0 0 20px var(--accent-glow); }
         .add-btn:hover { box-shadow: 0 0 30px var(--accent); }
 
-        .navbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 550px; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 15px 10px; z-index: 1000; border-radius: 25px; border: 1px solid #222; box-shadow: 0 10px 40px rgba(0,0,0,0.9); }
+        .navbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 550px; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 15px 10px; z-index: 1000; border-radius: 25px; border: 1px solid #222; box-shadow: 0 10px 40px rgba(0,0,0,0.9); transition: flex-direction 0.3s; }
         .nav-btn { font-family: inherit; background: none; border: none; font-weight: 700; color: var(--text-secondary); cursor: pointer; font-size: 0.9rem; display: flex; flex-direction: column; align-items: center; transition: all 0.3s ease; opacity: 0.5; position: relative; }
         .nav-btn.active { color: var(--accent); opacity: 1; transform: translateY(-4px); animation: textNeon 2s infinite; } 
         .nav-icon { font-size: 1.7rem; margin-bottom: 6px; transition: transform 0.3s ease; display: block; filter: grayscale(100%); }
@@ -130,7 +144,7 @@
 <body>
 
     <div id="splash-screen">
-        <img src="icon.jpg?v=9" class="splash-logo" alt="Routinz Logo">
+        <img src="icon.jpg?v=10" class="splash-logo" alt="Routinz Logo">
     </div>
 
     <div class="lang-modal-overlay" id="langModal">
@@ -153,7 +167,7 @@
             أضف التطبيق للشاشة الرئيسية لتجربة أسرع وبدون إنترنت.
         </p>
 
-        <div id="android-manual-instruction" style="display:none; background:#111; padding:20px; border-radius:16px; border:1px dashed var(--accent); color: var(--text-primary); font-size: 1.1rem;">
+        <div id="android-manual-instruction" style="display:none; background:#111; padding:20px; border-radius:16px; border:1px dashed var(--accent); color: var(--text-primary); font-size: 1.1rem; line-height: 1.6;">
             <span id="txt-android-manual-1">لتثبيت التطبيق، اضغط على النقاط الثلاث (⋮) أعلى المتصفح، ثم اختر</span><br>
             <strong style="color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);" id="txt-android-manual-2">"إضافة إلى الشاشة الرئيسية"</strong>
         </div>
@@ -163,7 +177,7 @@
             <span style="font-size: 2.2rem; margin-top: 15px; display: block; color: var(--accent); filter: drop-shadow(0 0 10px var(--accent-glow));">⬇</span>
         </div>
 
-        <button id="android-install-btn" class="btn-act" style="display:none;"><span id="txt-install-btn">تثبيت الآن</span></button>
+        <button id="android-install-btn" class="btn-act" style="display:none; margin-top: 15px;"><span id="txt-install-btn">تثبيت الآن</span></button>
     </div>
 
     <div class="app-container">
@@ -241,10 +255,17 @@
     </div>
 
     <script>
-        // --- نظام اللغات ---
+        // --- Service Worker وهمي لضمان التثبيت ---
+        if ('serviceWorker' in navigator) {
+            const swCode = "self.addEventListener('fetch', function(e) {});";
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log(err));
+        }
+
+        // --- نظام اللغات والترجمة ---
         const dict = {
             ar: {
-                dir: "rtl", font: "'Cairo', sans-serif", locale: "ar-SA",
+                dir: "rtl", font: "'Cairo', sans-serif",
                 todayTab: "اليوم", planTab: "الجدول", statsTab: "إحصائيات",
                 todayTitle: "مهام اليوم", emptyTitle: "لا توجد مهام حالياً", emptySub: "اذهب إلى 'الجدول' للبدء بالتخطيط",
                 planTitle: "تخطيط المهام", taskPlaceholder: "اسم المهمة القادمة...", addBtn: "إضافة المهمة",
@@ -257,7 +278,7 @@
                 allDay: "طوال اليوم"
             },
             en: {
-                dir: "ltr", font: "'Montserrat', sans-serif", locale: "en-US",
+                dir: "ltr", font: "'Montserrat', sans-serif",
                 todayTab: "Today", planTab: "Plan", statsTab: "Stats",
                 todayTitle: "Today's Tasks", emptyTitle: "No tasks currently", emptySub: "Go to 'Plan' to start planning",
                 planTitle: "Task Planning", taskPlaceholder: "Next task name...", addBtn: "Add Task",
@@ -270,7 +291,7 @@
                 allDay: "ALL DAY"
             },
             fr: {
-                dir: "ltr", font: "'Montserrat', sans-serif", locale: "fr-FR",
+                dir: "ltr", font: "'Montserrat', sans-serif",
                 todayTab: "Auj.", planTab: "Plan", statsTab: "Stats",
                 todayTitle: "Tâches du jour", emptyTitle: "Aucune tâche", emptySub: "Allez à 'Plan' pour planifier",
                 planTitle: "Planification", taskPlaceholder: "Nom de la tâche...", addBtn: "Ajouter la tâche",
@@ -322,23 +343,24 @@
 
             document.querySelectorAll('.lang-option').forEach(el => el.classList.remove('active'));
             document.getElementById('btn-lang-' + currentLang).classList.add('active');
+            
             document.getElementById('navbar').style.flexDirection = data.dir === 'rtl' ? 'row' : 'row-reverse';
 
             renderScroller(); renderRoutine(); renderToday();
         }
 
         function setLanguage(langCode) { currentLang = langCode; localStorage.setItem('routinz_lang', langCode); applyLanguage(); closeLangModal(); }
-        function openLangModal() { const m = document.getElementById('langModal'), c = document.getElementById('langModalContent'); m.style.display = 'flex'; setTimeout(() => { m.style.opacity = '1'; c.classList.add('show'); }, 10); }
-        function closeLangModal() { const m = document.getElementById('langModal'), c = document.getElementById('langModalContent'); m.style.opacity = '0'; c.classList.remove('show'); setTimeout(() => { m.style.display = 'none'; }, 300); }
+        function openLangModal() { document.getElementById('langModal').classList.add('show'); }
+        function closeLangModal() { document.getElementById('langModal').classList.remove('show'); }
 
-        // --- نظام التثبيت المضمون للجميع ---
+        // --- نظام التثبيت الذكي والمضمون ---
         let deferredPrompt = null;
         let promptFired = false;
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            promptFired = true; // تم التعرف على أندرويد يدعم التثبيت التلقائي
+            promptFired = true; 
         });
 
         function checkInstallLogic() {
@@ -348,25 +370,23 @@
             if (!isInStandaloneMode) {
                 setTimeout(() => {
                     const promptEl = document.getElementById('install-prompt');
-                    // إخفاء كل شيء أولاً
+                    
                     document.getElementById('txt-install-desc').style.display = 'none';
                     document.getElementById('android-install-btn').style.display = 'none';
                     document.getElementById('ios-instruction').style.display = 'none';
                     document.getElementById('android-manual-instruction').style.display = 'none';
 
                     if (isIos) {
-                        // آيفون
                         document.getElementById('ios-instruction').style.display = 'block';
                     } else if (promptFired) {
-                        // أندرويد (الزر التلقائي يعمل)
                         document.getElementById('txt-install-desc').style.display = 'block';
                         document.getElementById('android-install-btn').style.display = 'block';
                     } else {
-                        // أندرويد (الزر التلقائي معطل من المتصفح -> إظهار الطريقة اليدوية المضمونة)
                         document.getElementById('android-manual-instruction').style.display = 'block';
                     }
+                    
                     promptEl.classList.add('show');
-                }, 2000);
+                }, 2000); 
             }
         }
 
@@ -385,8 +405,8 @@
         const successAudio = new Audio('https://www.myinstants.com/media/sounds/discord-notification.mp3');
         successAudio.volume = 0.5; successAudio.preload = 'auto'; 
 
-        let routine = JSON.parse(localStorage.getItem('routinz_v36')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
-        let history = JSON.parse(localStorage.getItem('history_routinz_v36')) || {};
+        let routine = JSON.parse(localStorage.getItem('routinz_v38')) || {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []};
+        let history = JSON.parse(localStorage.getItem('history_routinz_v38')) || {};
         let currentPlanDay = '';
         let chartInstance = null;
 
@@ -407,7 +427,7 @@
                 onEnd: function (evt) {
                     const item = routine[currentPlanDay].splice(evt.oldIndex, 1)[0];
                     routine[currentPlanDay].splice(evt.newIndex, 0, item);
-                    localStorage.setItem('routinz_v36', JSON.stringify(routine));
+                    localStorage.setItem('routinz_v38', JSON.stringify(routine));
                     if(currentPlanDay === daysInternal[new Date().getDay()]) renderToday();
                 }
             });
@@ -417,7 +437,7 @@
 
         function playProfessionalDing() { try { if (navigator.vibrate) navigator.vibrate(30); successAudio.currentTime = 0; successAudio.play(); } catch(e) {} }
 
-        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v36')) || { count: 0, last100Date: null };
+        let streakData = JSON.parse(localStorage.getItem('streak_routinz_v38')) || { count: 0, last100Date: null };
         function updateStreakDisplay() { document.getElementById('streakCount').innerText = streakData.count; }
         
         function checkDailyStreak(todayTotal, todayDone) {
@@ -427,13 +447,13 @@
                     let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                     streakData.count = (streakData.last100Date === yesterday.toLocaleDateString('en-CA')) ? streakData.count + 1 : 1;
                     streakData.last100Date = todayStr;
-                    localStorage.setItem('streak_routinz_v36', JSON.stringify(streakData)); updateStreakDisplay();
+                    localStorage.setItem('streak_routinz_v38', JSON.stringify(streakData)); updateStreakDisplay();
                 }
             } else if (streakData.last100Date === todayStr && todayDone < todayTotal) {
                 let yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
                 streakData.last100Date = yesterday.toLocaleDateString('en-CA');
                 streakData.count = Math.max(0, streakData.count - 1);
-                localStorage.setItem('streak_routinz_v36', JSON.stringify(streakData)); updateStreakDisplay();
+                localStorage.setItem('streak_routinz_v38', JSON.stringify(streakData)); updateStreakDisplay();
             }
         }
 
@@ -467,7 +487,7 @@
             });
         }
         
-        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v36', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
+        function toggleTask(id) { history[id] = !history[id]; localStorage.setItem('history_routinz_v38', JSON.stringify(history)); if (history[id]) playProfessionalDing(); renderToday(); updateStats(); }
         
         function initChart() {
             const ctx = document.getElementById('myChart');
@@ -513,12 +533,12 @@
             const name = document.getElementById('taskInput').value, time = document.getElementById('timeInput').value, tag = document.getElementById('taskTag').value;
             if(!name) return;
             if(!routine[currentPlanDay]) routine[currentPlanDay] = [];
-            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v36', JSON.stringify(routine));
+            routine[currentPlanDay].push({name, time, tag}); localStorage.setItem('routinz_v38', JSON.stringify(routine));
             document.getElementById('taskInput').value = ''; document.getElementById('timeInput').value = '';
             renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); }
         }
 
-        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v36', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
+        function delTask(idx) { routine[currentPlanDay].splice(idx, 1); localStorage.setItem('routinz_v38', JSON.stringify(routine)); renderRoutine(); if(currentPlanDay === daysInternal[new Date().getDay()]) { renderToday(); updateStats(); } }
 
         function tConvert(time) {
             if(!time) return dict[currentLang].allDay; 
